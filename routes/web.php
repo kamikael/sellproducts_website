@@ -8,6 +8,7 @@ use App\Http\Controllers\VitrineController;
 
 Route::get('/', [VitrineController::class, 'index'])->name('accueil');
 
+//login & register
 
 
 // Routes publiques pour le panier et la commande

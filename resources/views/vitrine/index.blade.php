@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-12">
                 <h1 class="text-center mb-4">🎪 Vitrine des Stands</h1>
-                
+
                 <!-- Barre de recherche -->
                 <div class="row justify-content-center mb-4">
                     <div class="col-md-6">
@@ -24,13 +24,9 @@
 
                 <!-- Navigation -->
                 <div class="text-center mb-4">
-                    @auth
-                        <a href="{{ route('produits.index') }}" class="btn btn-success me-2">Mes Produits</a>
                         <a href="{{ route('commandes.panier') }}" class="btn btn-info me-2">Mon Panier</a>
-                    @else
                         <a href="{{ route('login') }}" class="btn btn-primary me-2">Se connecter</a>
                         <a href="{{ route('register') }}" class="btn btn-outline-primary">S'inscrire</a>
-                    @endauth
                 </div>
 
                 @if($stands->count() > 0)
@@ -42,7 +38,7 @@
                                         <h5 class="card-title">{{ $stand->nom_stand }}</h5>
                                         <p class="card-text">{{ $stand->description }}</p>
                                         <p class="card-text"><small class="text-muted">Par: {{ $stand->user->name }}</small></p>
-                                        
+
                                         @if($stand->produits->count() > 0)
                                             <h6>Produits disponibles ({{ $stand->produits->count() }})</h6>
                                             <div class="mb-3">
@@ -59,7 +55,7 @@
                                         @else
                                             <p class="text-muted">Aucun produit disponible pour le moment</p>
                                         @endif
-                                        
+
                                         <a href="{{ route('vitrine.stand', $stand) }}" class="btn btn-primary">Voir le stand</a>
                                     </div>
                                 </div>
@@ -78,4 +74,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

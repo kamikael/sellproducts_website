@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Str; @endphp
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,16 +20,26 @@
 
                 @if($stands->count() > 0)
                     <p class="text-muted">{{ $stands->count() }} résultat(s) trouvé(s)</p>
-                    
+
                     <div class="row">
                         @foreach($stands as $stand)
                             <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
+                                    @if($stand->produits->first() && $stand->produits->first()->image_url)
+                                        <img
+                                            src="{{ Str::startsWith($stand->produits->first()->image_url, ['http://', 'https://'])
+                                                ? $stand->produits->first()->image_url
+                                                : asset($stand->produits->first()->image_url) }}"
+                                            class="card-img-top mb-2"
+                                            alt="Image du produit {{ $stand->produits->first()->nom }}"
+                                            style="height: 180px; object-fit: cover;"
+                                        >
+                                    @endif
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $stand->nom_stand }}</h5>
                                         <p class="card-text">{{ $stand->description }}</p>
                                         <p class="card-text"><small class="text-muted">Par: {{ $stand->user->name }}</small></p>
-                                        
+
                                         @if($stand->produits->count() > 0)
                                             <h6>Produits disponibles ({{ $stand->produits->count() }})</h6>
                                             <div class="mb-3">
@@ -45,7 +56,7 @@
                                         @else
                                             <p class="text-muted">Aucun produit disponible pour le moment</p>
                                         @endif
-                                        
+
                                         <a href="{{ route('vitrine.stand', $stand) }}" class="btn btn-primary">Voir le stand</a>
                                     </div>
                                 </div>
@@ -74,4 +85,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

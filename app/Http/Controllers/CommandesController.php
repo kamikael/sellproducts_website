@@ -9,11 +9,6 @@ use Illuminate\Http\Request;
 
 class CommandesController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth')->only(['historique', 'show', 'adminCommandes']);
-    }
-
     /**
      * Afficher le panier temporaire
      */
@@ -121,8 +116,6 @@ class CommandesController extends Controller
                 'details_commande' => [
                     'produits' => $produits,
                     'total' => $totalStand,
-                    'client_id' => auth()->id(),
-                    'client_email' => auth()->user()->email
                 ],
                 'date_commande' => now()
             ]);
@@ -131,7 +124,8 @@ class CommandesController extends Controller
         // Vider le panier
         session()->forget('panier');
 
-        return redirect()->route('commandes.historique')->with('success', 'Commande soumise avec succès.');
+        // Rediriger vers le panier avec un message de confirmation
+        return redirect()->route('commandes.panier')->with('success', 'Votre commande a bien été enregistrée !');
     }
 
     /**
