@@ -17,7 +17,7 @@ class VitrineController extends Controller
             $query->where('role', 'entrepreneur_approuve');
         })->with(['produits', 'user'])->get();
 
-        return view('vitrine.index', compact('stands'));
+        return view('index', compact('stands'));
     }
 
     /**
@@ -31,7 +31,7 @@ class VitrineController extends Controller
         }
 
         $stand->load(['produits', 'user']);
-        
+
         return view('vitrine.stand', compact('stand'));
     }
 
@@ -41,7 +41,7 @@ class VitrineController extends Controller
     public function rechercher(Request $request)
     {
         $query = $request->get('q');
-        
+
         if (!$query) {
             return redirect()->route('vitrine.index');
         }
@@ -59,4 +59,4 @@ class VitrineController extends Controller
 
         return view('vitrine.recherche', compact('stands', 'query'));
     }
-} 
+}

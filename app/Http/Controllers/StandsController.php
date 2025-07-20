@@ -90,4 +90,4 @@ class StandsController extends Controller
         $stand->delete();
         return redirect()->route('stands.index')->with('success', 'Stand supprimé avec succès.');
     }
-} 
+}

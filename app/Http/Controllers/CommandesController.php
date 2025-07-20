@@ -11,7 +11,7 @@ class CommandesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->only(['historique', 'show', 'adminCommandes']);
     }
 
     /**
@@ -88,7 +88,7 @@ class CommandesController extends Controller
     public function soumettreCommande(Request $request)
     {
         $panier = session()->get('panier', []);
-        
+
         if (empty($panier)) {
             return redirect()->route('commandes.panier')->with('error', 'Votre panier est vide.');
         }
@@ -115,7 +115,7 @@ class CommandesController extends Controller
         // Créer une commande pour chaque stand
         foreach ($commandesParStand as $standId => $produits) {
             $totalStand = array_sum(array_column($produits, 'sous_total'));
-            
+
             Commande::create([
                 'stand_id' => $standId,
                 'details_commande' => [
@@ -140,7 +140,7 @@ class CommandesController extends Controller
     public function historique()
     {
         $this->authorize('viewAny', Commande::class);
-        
+
         $commandes = Commande::whereHas('stand', function($query) {
             $query->where('user_id', auth()->id());
         })->with('stand')->orderBy('created_at', 'desc')->get();
@@ -163,8 +163,8 @@ class CommandesController extends Controller
     public function adminCommandes()
     {
         $this->authorize('viewAdmin', Commande::class);
-        
+
         $commandes = Commande::with(['stand.user'])->orderBy('created_at', 'desc')->get();
         return view('commandes.admin', compact('commandes'));
     }
-} 
+}
