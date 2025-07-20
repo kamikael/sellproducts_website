@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Produit;
+use App\Models\Commande;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ProduitPolicy
+class CommandePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,9 +19,9 @@ class ProduitPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Produit $produit): bool
+    public function view(User $user, Commande $commande): bool
     {
-         return $user->role === 'entrepreneur_approuve';
+        return $user->role === 'entrepreneur_approuve' && $user->id === $commande->stand->user_id;
     }
 
     /**
@@ -29,29 +29,37 @@ class ProduitPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role === 'entrepreneur_approuve';
+        return true; // Tout utilisateur connecté peut créer une commande
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Produit $produit): bool
+    public function update(User $user, Commande $commande): bool
     {
-        return $user->id === $produit->stand->user_id;;
+        return false; // Les commandes ne peuvent pas être modifiées
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Produit $produit): bool
+    public function delete(User $user, Commande $commande): bool
     {
-        return $user->id === $produit->stand->user_id;
+        return false; // Les commandes ne peuvent pas être supprimées
+    }
+
+    /**
+     * Determine whether the user can view admin commandes.
+     */
+    public function viewAdmin(User $user): bool
+    {
+        return $user->role === 'admin';
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Produit $produit): bool
+    public function restore(User $user, Commande $commande): bool
     {
         return false;
     }
@@ -59,8 +67,8 @@ class ProduitPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Produit $produit): bool
+    public function forceDelete(User $user, Commande $commande): bool
     {
         return false;
     }
-}
+} 

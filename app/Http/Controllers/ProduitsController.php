@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produit;
+use App\Models\Stand;
 use Illuminate\Http\Request;
 
 class ProduitsController extends Controller
@@ -32,7 +33,8 @@ class ProduitsController extends Controller
     public function create()
 {
     $this->authorize('create', Produit::class);
-    return view('produits.create');
+    $stands = Stand::where('user_id', auth()->id())->get();
+    return view('produits.create', compact('stands'));
 }
 
     /**
@@ -58,7 +60,8 @@ class ProduitsController extends Controller
     public function edit(Produit $produit)
 {
     $this->authorize('update', $produit);
-    return view('produits.edit', compact('produit'));
+    $stands = Stand::where('user_id', auth()->id())->get();
+    return view('produits.edit', compact('produit', 'stands'));
 }
 
 

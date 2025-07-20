@@ -5,7 +5,11 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Produit;
+use App\Models\Stand;
+use App\Models\Commande;
 use App\Policies\ProduitPolicy;
+use App\Policies\StandPolicy;
+use App\Policies\CommandePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Produit::class => ProduitPolicy::class,
+        Stand::class => StandPolicy::class,
+        Commande::class => CommandePolicy::class,
     ];
 
     /**
