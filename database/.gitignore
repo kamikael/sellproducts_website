@@ -1,1 +1,5 @@
 *.sqlite*
+*test_backend.md*
+echo "test_backend.md" >> .gitignore
+echo "setup_mamp.sh" >> .gitignore  # À ajouter aussi selon votre capture
+echo ".env" >> .gitignore          # Important pour la sécurité

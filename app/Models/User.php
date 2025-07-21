@@ -13,15 +13,24 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'utilisateurs';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
         'name',
+        'nom_entreprise',
         'email',
         'password',
         'role',
+        'motif_rejet',
     ];
 
     /**
