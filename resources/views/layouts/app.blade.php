@@ -7,7 +7,6 @@
     <title>@yield('title', 'Eat&Drink')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    @vite('resources/css/app.css')
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
@@ -17,16 +16,32 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Accueil</a>
+                        <a class="btn {{ request()->is('/') ? 'btn-primary' : 'btn-outline-dark' }}" href="/">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">Inscription</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Connexion</a>
-                    </li>
+
+                    @guest
+                        <li class="nav-item">
+                            <a class="btn {{ request()->routeIs('register') ? 'btn-primary' : 'btn-outline-dark' }}" href="{{ route('register') }}">
+                                Passer une demande de stand
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn {{ request()->routeIs('login') ? 'btn-primary' : 'btn-outline-dark' }}" href="{{ route('login') }}">
+                                Accéder à votre stand
+                            </a>
+                        </li>
+                    @endguest
+
+                    @auth
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-dark">Déconnexion</button>
+                            </form>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>

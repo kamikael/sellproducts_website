@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Stand;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class StandsController extends Controller
 {
@@ -20,32 +21,6 @@ class StandsController extends Controller
         $this->authorize('viewAny', Stand::class);
         $stands = Stand::where('user_id', auth()->id())->get();
         return view('stands.index', compact('stands'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $this->authorize('create', Stand::class);
-        return view('stands.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $this->authorize('create', Stand::class);
-        $data = $request->validate([
-            'nom_stand' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-
-        $data['user_id'] = auth()->id();
-        Stand::create($data);
-
-        return redirect()->route('stands.index')->with('success', 'Stand créé avec succès.');
     }
 
     /**
@@ -82,12 +57,26 @@ class StandsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Show the form for creating a new resource.
      */
-    public function destroy(Stand $stand)
+    public function create()
     {
-        $this->authorize('delete', $stand);
-        $stand->delete();
-        return redirect()->route('stands.index')->with('success', 'Stand supprimé avec succès.');
+        $this->authorize('create', Stand::class);
+        return view('stands.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $this->authorize('create', Stand::class);
+        $data = $request->validate([
+            'nom_stand' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+        $data['user_id'] = auth()->id();
+        Stand::create($data);
+        return redirect()->route('stands.index')->with('success', 'Stand créé avec succès.');
     }
 }

@@ -53,7 +53,10 @@ class CommandesController extends Controller
 
         session()->put('panier', $panier);
 
-        return redirect()->back()->with('success', 'Produit ajouté au panier.');
+        // Message personnalisé
+        $message = 'Le produit ' . $produit->nom . ' a été ajouté à votre panier.';
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -98,11 +101,12 @@ class CommandesController extends Controller
                     $commandesParStand[$standId] = [];
                 }
                 $commandesParStand[$standId][] = [
-                    'produit_id' => $produit->id,
+                    'id' => $produit->id,
                     'nom' => $produit->nom,
                     'prix' => $produit->prix,
                     'quantite' => $quantite,
-                    'sous_total' => $produit->prix * $quantite
+                    'sous_total' => $produit->prix * $quantite,
+                    'image_url' => $produit->image_url,
                 ];
             }
         }
@@ -119,6 +123,13 @@ class CommandesController extends Controller
                 ],
                 'date_commande' => now()
             ]);
+        }
+
+        // Sauvegarder l'historique d'achat dans la session (toutes les commandes)
+        $historique = session()->get('historique_achats', []);
+        if (!empty($panier)) {
+            $historique[] = $panier;
+            session()->put('historique_achats', $historique);
         }
 
         // Vider le panier
@@ -160,5 +171,14 @@ class CommandesController extends Controller
 
         $commandes = Commande::with(['stand.user'])->orderBy('created_at', 'desc')->get();
         return view('commandes.admin', compact('commandes'));
+    }
+
+    /**
+     * Vider l'historique d'achat du panier (session)
+     */
+    public function viderHistorique()
+    {
+        session()->forget('historique_achats');
+        return redirect()->route('commandes.panier')->with('success', 'Historique vidé.');
     }
 }
