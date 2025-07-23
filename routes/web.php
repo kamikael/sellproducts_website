@@ -8,10 +8,17 @@ use App\Http\Controllers\VitrineController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Produit;
 use App\Http\Controllers\EntrepreneursController;
-
-Route::get('/', [VitrineController::class, 'index'])->name('vitrine.index');
-
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminController;
 //login & register
+
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/', [VitrineController::class, 'index'])->name('vitrine.index');
 
 // Routes publiques pour le panier et la commande
 Route::get('/panier', [CommandesController::class, 'panier'])->name('commandes.panier');
@@ -47,4 +54,14 @@ Route::middleware(['auth'])->group(function () {
     // Ajout des routes attente et dashboard dans le groupe auth
     Route::get('/attente', [EntrepreneursController::class, 'attente'])->name('attente');
     Route::get('/dashboard', [EntrepreneursController::class, 'dashboard'])->name('dashboard');
+    Route::get('admin', [AdminController::class, 'index'])->name('admin.index');
+    // Approver un utilisateur (POST)
+    Route::post('/admin/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
+    //pour l'email
+    Route::get('/test-gmail', function() {
+        Mail::raw('Test SMTP Gmail', function($m) {
+            $m->to('destinataire@example.com')->subject('Test');
+        });
+        return "Email envoyé !";
+    });
 });
