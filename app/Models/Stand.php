@@ -12,7 +12,7 @@ class Stand extends Model
     protected $fillable = [
         'nom_stand',
         'description',
-        'utilisateur_id',
+        'user_id',
     ];
 
     public function user()
