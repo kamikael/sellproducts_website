@@ -84,7 +84,7 @@
                                                         <h5 class="modal-title">Rejeter {{ $request->nom_entreprise }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                    <form method="POST" action="">
+                                                    <form method="POST" action="{{ route('admin.users.reject', $request->id) }}">
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div class="mb-3">
