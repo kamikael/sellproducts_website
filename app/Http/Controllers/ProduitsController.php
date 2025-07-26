@@ -52,16 +52,17 @@ class ProduitsController extends Controller
         'image_file' => 'nullable|image|max:2048',
     ]);
 
-    // Vérification exclusive : un seul champ image possible
+       // Vérification exclusive
     if ($request->filled('image_url') && $request->hasFile('image_file')) {
         return back()->withInput()->withErrors(['image_url' => 'Veuillez choisir soit une URL, soit un fichier image, pas les deux.']);
     }
 
-    // Gestion de l'upload d'image
+    // Gestion de l'upload d'image - MODIFICATION ICI
     if ($request->hasFile('image_file')) {
         $path = $request->file('image_file')->store('produits', 'public');
         $data['image_url'] = 'storage/' . $path;
     }
+
 
     Produit::create($data);
     return redirect()->route('produits.index')->with('success','Produit créé.');
