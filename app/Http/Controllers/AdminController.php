@@ -5,7 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\Stand;
 use App\Models\User;
 use App\Mail\UserApproved;
+use App\Mail\UserRejected;
 use Illuminate\Support\Facades\Mail;
+
 
 
 class AdminController extends Controller
@@ -51,6 +53,27 @@ class AdminController extends Controller
     }
 
     return redirect()->route('admin.index')->with('error', 'Cet utilisateur ne peut pas être approuvé.');
+}
+
+//rejet de demande de stande et envoie  d'émail de rejet
+
+public function reject($id)
+{
+    $user = User::findOrFail($id);
+    $motif = request()->input('motif_rejet'); // Récupère le motif du formulaire
+
+    // Envoyer l'e-mail AVANT suppression
+    Mail::to($user->email)->send(new UserRejected($user, $motif));
+    
+
+    // Facultatif : Mettre à jour un statut avant suppression
+    // $user->status = 'rejected';
+    // $user->save();
+
+    // Supprimer l'utilisateur
+    $user->delete();
+
+    return redirect()->back()->with('success', 'Utilisateur rejeté et supprimé.');
 }
 
 }

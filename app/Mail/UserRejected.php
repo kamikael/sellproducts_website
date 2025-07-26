@@ -17,10 +17,12 @@ class UserRejected extends Mailable
     /**
      * Create a new message instance.
      */
-    public $user
-    public function __construct()
+    public $user;
+    public $motif;
+    public function __construct(User $user, $motif)
     {
         $this-> user =$user;
+        $this-> motif = $motif;
     }
 
     /**

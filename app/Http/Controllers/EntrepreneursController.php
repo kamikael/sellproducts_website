@@ -36,7 +36,7 @@ class EntrepreneursController extends Controller
     {
         $user = auth()->user();
         if ($user && $user->role === 'entrepreneur_approuve') {
-            return redirect()->route('dashboard');
+            return redirect()->route('stands.index'); // Redirige vers les stands si l'utilisateur est approuvé
         }
         if ($user && $user->role === 'entrepreneur_en_attente') {
             return view('auth.attente');
