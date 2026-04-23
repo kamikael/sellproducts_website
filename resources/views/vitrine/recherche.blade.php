@@ -3,56 +3,6 @@
 @section('title', 'Résultats de recherche - ' . $query)
 
 @section('content')
-<style>
-    /* Styles pour la page de recherche */
-    .search-form .form-control {
-        border-radius: 50px 0 0 50px !important;
-        padding: 12px 20px;
-        border-right: none;
-    }
-
-    .search-form .btn {
-        border-radius: 0 50px 50px 0 !important;
-        padding: 12px 25px;
-    }
-
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card-img-container {
-        height: 200px;
-        overflow: hidden;
-    }
-
-    .card-img-top {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-    }
-
-    .card:hover .card-img-top {
-        transform: scale(1.05);
-    }
-
-    .product-preview {
-        background: #f9f9f9;
-        border-radius: 8px;
-        padding: 10px;
-    }
-
-    .empty-state {
-        background: #f8f9fa;
-        border-radius: 12px;
-    }
-</style>
 
 <div class="container mt-5">
     <div class="row">
@@ -67,14 +17,15 @@
                 <p class="text-muted">{{ $stands->count() }} résultat(s) trouvé(s)</p>
             </div>
 
+            <div class="vitrine-bg-blobs"></div>
             <div class="row justify-content-center mb-5">
                 <div class="col-md-8">
-                    <form action="{{ route('vitrine.recherche') }}" method="GET" class="search-form">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control form-control-lg border-end-0"
+                    <form action="{{ route('vitrine.recherche') }}" method="GET" class="search-form-minimal">
+                        <div class="search-input-group">
+                            <input type="text" name="q" class="search-input"
                                 placeholder="Rechercher des stands ou produits..." value="{{ $query }}">
-                            <button type="submit" class="btn btn-danger px-4">
-                                <i class="bi bi-search"></i> Rechercher
+                            <button type="submit" class="search-btn-glass">
+                                <i class="bi bi-search"></i>
                             </button>
                         </div>
                     </form>
@@ -100,7 +51,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <h5 class="card-title mb-0">{{ $stand->nom_stand }}</h5>
-                                        <span class="badge bg-danger">{{ $stand->produits->count() }} produits</span>
+                                        <span class="badge btn-glass-dark fw-normal">{{ $stand->produits->count() }} produits</span>
                                     </div>
                                     <p class="card-text text-muted mb-3">{{ Str::limit($stand->description, 100) }}</p>
                                     <p class="text-muted small mb-3">
@@ -112,7 +63,7 @@
                                             @foreach($stand->produits->take(3) as $produit)
                                                 <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                                     <span>{{ $produit->nom }}</span>
-                                                    <span class="fw-bold text-danger">{{ number_format($produit->prix, 2) }} €</span>
+                                                    <span class="fw-bold">{{ number_format($produit->prix, 2) }} €</span>
                                                 </div>
                                             @endforeach
                                             @if($stand->produits->count() > 3)
@@ -129,7 +80,7 @@
                                         </div>
                                     @endif
 
-                                    <a href="{{ route('vitrine.stand', $stand) }}" class="btn btn-outline-danger w-100">
+                                    <a href="{{ route('vitrine.stand', $stand) }}" class="btn btn-glass-dark w-100">
                                         <i class="bi bi-shop"></i> Visiter le stand
                                     </a>
                                 </div>
@@ -138,14 +89,11 @@
                     @endforeach
                 </div>
             @else
-                <div class="empty-state text-center py-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24" class="mb-4">
-                        <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                        <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
-                    </svg>
+                <div class="empty-state text-center py-5" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 30px;">
+                    <i class="bi bi-search-heart display-1 mb-4" style="color: rgba(0,0,0,0.1)"></i>
                     <h4 class="fw-light mb-3">Aucun résultat trouvé</h4>
                     <p class="text-muted">Aucun stand ou produit ne correspond à votre recherche "{{ $query }}".</p>
-                    <a href="{{ route('vitrine.index') }}" class="btn btn-primary">Retourner à la vitrine</a>
+                    <a href="{{ route('vitrine.index') }}" class="btn btn-glass-dark px-5 mt-3">Retourner à la vitrine</a>
                 </div>
             @endif
         </div>

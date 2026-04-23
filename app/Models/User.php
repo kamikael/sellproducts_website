@@ -29,6 +29,8 @@ class User extends Authenticatable
         'nom_entreprise',
         'email',
         'password',
+        'tel',
+        'avatar',
         'role',
         'motif_rejet',
     ];

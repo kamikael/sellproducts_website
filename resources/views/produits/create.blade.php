@@ -104,11 +104,10 @@
 </script>
 @endsection
 
----
 
 @section('styles')
 <style>
-    /* Styles for the card container */
+    /* Styles for the card container */P
     .card {
         background-color: #fff;
         border-radius: 1rem; /* Rounded corners for consistency */
