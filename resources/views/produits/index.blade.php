@@ -3,135 +3,143 @@
 @section('title', 'Mes Produits')
 
 @section('content')
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="fw-bold mb-0">
-                    <i class="bi bi-box-seam text-danger me-2"></i>Mes Produits
-                </h1>
-
-                <div class="d-flex gap-2">
-                    <a href="{{ route('produits.create') }}" class="btn btn-danger">
-                        <i class="bi bi-plus-circle me-1"></i> Ajouter un produit
+<div class="admin-dashboard-wrapper min-vh-100 py-5" style="background: transparent; color: #1e293b; padding-top: 15rem;">
+    <div class="container-fluid px-5 py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 animate-in">
+            <div class="glass-container p-4 rounded-5 border border-white border-opacity-50">
+                <p class="text-secondary small ls-2 text-uppercase mb-2 fw-bold" style="letter-spacing: 4px;">Mon Inventaire</p>
+                <h1 class="display-3 fw-bold mb-0 text-dark">Mes Produits.</h1>
+                <p class="fs-5 text-muted mt-3 fw-medium">Gérez votre catalogue de saveurs disponibles sur <span class="text-primary">Eat&Drink</span>.</p>
+            </div>
+            <div class="text-end pb-3">
+                <div class="d-flex gap-3">
+                    <a href="{{ route('produits.create') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                        <i class="bi bi-plus-circle me-2"></i>NOUVEAU PRODUIT
                     </a>
-                    <a href="{{ route('stands.index') }}" class="btn btn-outline-danger">
-                        <i class="bi bi-shop me-1"></i> Mes stands
-                    </a>
-                    <a href="{{ route('commandes.historique') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-clock-history me-1"></i> Commandes
+                    <a href="{{ route('stands.index') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                        <i class="bi bi-shop me-2"></i>RETOUR AUX STANDS
                     </a>
                 </div>
             </div>
+        </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4">
-                    <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+        @if(session('success'))
+            <div class="alert glass-container border-success border-opacity-25 text-success p-4 rounded-5 mb-5 animate-in">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+            </div>
+        @endif
 
-            @if($products->count() > 0)
-                <div class="row g-4">
-                    @foreach($products as $product)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
-                                @if($product->image_url)
-                                    <div class="card-img-container" style="height: 200px;">
-                                        <img src="{{ $product->image_url }}"
-                                             class="card-img-top"
-                                             alt="{{ $product->nom }}"
-                                             style="object-position: center;">
+        @if($products->count() > 0)
+            <div class="row g-4 animate-in" style="animation-delay: 0.1s;">
+                @foreach($products as $product)
+                    <div class="col-md-6 col-lg-4">
+                        <div class="glass-container p-0 rounded-5 shadow-sm border border-white h-100 transition-all hover-up overflow-hidden">
+                            @if($product->image_url)
+                                <div class="card-img-container" style="height: 250px; position: relative;">
+                                    <img src="{{ $product->image_url }}" class="w-100 h-100 object-fit-cover transition-all" alt="{{ $product->nom }}">
+                                    <div class="position-absolute top-0 end-0 p-3">
+                                        <span class="badge glass-pill text-dark px-3 py-2 rounded-pill shadow-sm">{{ number_format($product->prix, 2) }} €</span>
                                     </div>
-                                @else
-                                    <div class="card-img-container bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                            @else
+                                <div class="card-img-container bg-white bg-opacity-50 d-flex flex-column align-items-center justify-content-center" style="height: 250px;">
+                                    <i class="bi bi-image text-secondary opacity-25 mb-2" style="font-size: 3rem;"></i>
+                                    <span class="text-secondary small fw-bold">AUCUNE IMAGE</span>
+                                    <div class="position-absolute top-0 end-0 p-3">
+                                        <span class="badge glass-pill text-dark px-3 py-2 rounded-pill shadow-sm">{{ number_format($product->prix, 2) }} €</span>
                                     </div>
-                                @endif
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title mb-0">{{ $product->nom }}</h5>
-                                        <span class="badge bg-danger">{{ number_format($product->prix, 2) }} €</span>
-                                    </div>
-                                    <p class="card-text text-muted mb-2">{{ Str::limit($product->description, 80) }}</p>
-                                    <p class="text-muted small mb-3">
-                                        <i class="bi bi-shop"></i> {{ $product->stand->nom_stand }}
-                                    </p>
+                                </div>
+                            @endif
 
-                                    <div class="d-flex justify-content-between">
-                                        <a href="{{ route('produits.edit', $product) }}" class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-pencil me-1"></i> Modifier
-                                        </a>
-                                        <form action="{{ route('produits.destroy', $product) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
-                                                <i class="bi bi-trash me-1"></i> Supprimer
-                                            </button>
-                                        </form>
+                            <div class="p-5">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h3 class="fw-bold text-dark mb-0">{{ $product->nom }}</h3>
+                                    <div class="text-secondary small">
+                                        <i class="bi bi-shop me-1 text-primary"></i>{{ $product->stand->nom_stand }}
                                     </div>
+                                </div>
+                                <p class="text-secondary mb-4">{{ Str::limit($product->description, 100) }}</p>
+
+                                <div class="d-flex gap-3 pt-3 border-top border-white border-opacity-50">
+                                    <a href="{{ route('produits.edit', $product) }}" class="btn btn-glass-auth flex-grow-1 text-center py-2">
+                                        <i class="bi bi-pencil me-1"></i> MODIFIER
+                                    </a>
+                                    <form action="{{ route('produits.destroy', $product) }}" method="POST" class="flex-grow-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-glass-auth w-100 text-center py-2" onclick="return confirm('Supprimer ce produit ?')">
+                                            <i class="bi bi-trash me-1"></i> SUPPRIMER
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state text-center py-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24" class="mb-4">
-                        <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                        <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
-                    </svg>
-                    <h3 class="fw-light mb-3">Aucun produit enregistré</h3>
-                    <p class="text-muted mb-4">Commencez par ajouter vos premiers produits à votre stand</p>
-                    <a href="{{ route('produits.create') }}" class="btn btn-danger">
-                        <i class="bi bi-plus-circle me-1"></i> Ajouter un produit
-                    </a>
-                </div>
-            @endif
-        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="glass-container p-5 rounded-5 text-center animate-in">
+                <i class="bi bi-box-seam display-1 text-secondary opacity-25 mb-4"></i>
+                <h3 class="text-secondary fw-bold">Inventaire vide</h3>
+                <p class="text-muted mb-5">Ajoutez vos premiers délices pour les proposer à vos clients.</p>
+                <a href="{{ route('produits.create') }}" class="btn btn-glass-auth px-5 py-3 fw-bold">
+                    AJOUTER MON PREMIER PRODUIT
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 
 <style>
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .ls-1 { letter-spacing: 1px; }
+    .ls-2 { letter-spacing: 2px; }
+    
+    .glass-container {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        transition: all 0.4s ease;
     }
 
-    .card-img-container {
-        overflow: hidden;
+    .glass-pill {
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(10px);
     }
 
-    .card-img-top {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
+    .btn-glass-auth {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        color: #64748b !important;
+        border-radius: 50px !important;
+        transition: all 0.3s ease;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    .btn-glass-auth:hover {
+        background: #fff;
+        color: #000 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
 
-    .card:hover .card-img-top {
+    .hover-up:hover {
+        transform: translateY(-10px);
+        background: rgba(255,255,255,0.8);
+    }
+
+    .hover-up:hover img {
         transform: scale(1.05);
     }
 
-    .empty-state {
-        background: #f8f9fa;
-        border-radius: 12px;
+    .animate-in {
+        animation: slideIn 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        opacity: 0;
     }
 
-    .hover-shadow {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    .transition-all {
-        transition: all 0.3s ease;
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection

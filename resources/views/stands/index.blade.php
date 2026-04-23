@@ -3,96 +3,129 @@
 @section('title', 'Mes Stands')
 
 @section('content')
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="fw-bold mb-0">
-                    <i class="bi bi-shop text-danger me-2"></i>Mes Stands
-                </h1>
-
+<div class="admin-dashboard-wrapper min-vh-100 py-5" style="background: transparent; color: #1e293b; padding-top: 15rem;">
+    <div class="container-fluid px-5 py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 animate-in">
+            <div class="glass-container p-4 rounded-5 border border-white border-opacity-50">
+                <p class="text-secondary small ls-2 text-uppercase mb-2 fw-bold" style="letter-spacing: 4px;">Mon Commerce</p>
+                <h1 class="display-3 fw-bold mb-0 text-dark">Mes Stands.</h1>
+                <p class="fs-5 text-muted mt-3 fw-medium">Gérez vos points de vente et votre présence sur <span class="text-primary">Eat&Drink</span>.</p>
+            </div>
+            <div class="text-end pb-3">
                 <div class="d-flex gap-3">
-                    <a href="{{ route('stands.create') }}" class="btn btn-danger">
-                        <i class="bi bi-plus-circle me-1"></i> Nouveau stand
+                    <a href="{{ route('stands.create') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                        <i class="bi bi-plus-circle me-2"></i>NOUVEAU STAND
                     </a>
-                    <a href="{{ route('produits.index') }}" class="btn btn-outline-danger">
-                        <i class="bi bi-box-seam me-1"></i> Gérer les produits
+                    <a href="{{ route('produits.index') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                        <i class="bi bi-box-seam me-2"></i>MES PRODUITS
                     </a>
                 </div>
             </div>
+        </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4">
-                    <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+        @if(session('success'))
+            <div class="alert glass-container border-success border-opacity-25 text-success p-4 rounded-5 mb-5 animate-in">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+            </div>
+        @endif
 
-            @if($stands->count() > 0)
-                <div class="row g-4">
-                    @foreach($stands as $stand)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <h5 class="card-title mb-0">{{ $stand->nom_stand }}</h5>
-                                        <span class="badge bg-danger">{{ $stand->produits->count() }} produit(s)</span>
-                                    </div>
-                                    <p class="card-text text-muted mb-4">{{ Str::limit($stand->description, 100) }}</p>
-
-                                    <div class="d-flex justify-content-between">
-                                        <a href="{{ route('stands.show', $stand) }}" class="btn btn-outline-danger btn-sm">
-                                            <i class="bi bi-eye me-1"></i> Voir
-                                        </a>
-                                        <a href="{{ route('stands.edit', $stand) }}" class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-pencil me-1"></i> Modifier
-                                        </a>
-                                    </div>
+        @if($stands->count() > 0)
+            <div class="row g-4 animate-in" style="animation-delay: 0.1s;">
+                @foreach($stands as $stand)
+                    <div class="col-md-6 col-lg-4">
+                        <div class="glass-container p-5 rounded-5 shadow-sm border border-white h-100 transition-all hover-up">
+                            <div class="d-flex justify-content-between align-items-start mb-4">
+                                <div class="icon-box bg-soft-primary">
+                                    <i class="bi bi-shop fs-2"></i>
                                 </div>
+                                <span class="badge glass-pill text-dark px-3 py-2 rounded-pill border border-white">{{ $stand->produits->count() }} PRODUITS</span>
+                            </div>
+                            
+                            <h3 class="fw-bold text-dark mb-3">{{ $stand->nom_stand }}</h3>
+                            <p class="text-secondary mb-4">{{ Str::limit($stand->description, 120) }}</p>
+
+                            <div class="d-flex gap-3 pt-3 border-top border-white border-opacity-50">
+                                <a href="{{ route('stands.show', $stand) }}" class="btn btn-glass-auth flex-grow-1 text-center py-2">
+                                    <i class="bi bi-eye me-1"></i> VOIR
+                                </a>
+                                <a href="{{ route('stands.edit', $stand) }}" class="btn btn-glass-auth flex-grow-1 text-center py-2">
+                                    <i class="bi bi-pencil me-1"></i> ÉDITER
+                                </a>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state text-center py-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24" class="mb-4">
-                        <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                        <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
-                    </svg>
-                    <h3 class="fw-light mb-3">Aucun stand créé</h3>
-                    <p class="text-muted mb-4">Commencez par créer votre premier stand pour vendre vos produits</p>
-                    <a href="{{ route('stands.create') }}" class="btn btn-danger">
-                        <i class="bi bi-plus-circle me-1"></i> Créer un stand
-                    </a>
-                </div>
-            @endif
-        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="glass-container p-5 rounded-5 text-center animate-in">
+                <i class="bi bi-shop display-1 text-secondary opacity-25 mb-4"></i>
+                <h3 class="text-secondary fw-bold">Aucun stand actif</h3>
+                <p class="text-muted mb-5">Commencez l'aventure en créant votre premier point de vente.</p>
+                <a href="{{ route('stands.create') }}" class="btn btn-glass-auth px-5 py-3 fw-bold">
+                    CRÉER MON PREMIER STAND
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 
 <style>
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .ls-1 { letter-spacing: 1px; }
+    .ls-2 { letter-spacing: 2px; }
+    
+    .glass-container {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        transition: all 0.4s ease;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        background: rgba(244, 118, 104, 0.1);
+        color: #f47668;
     }
 
-    .empty-state {
-        background: #f8f9fa;
-        border-radius: 12px;
+    .glass-pill {
+        background: rgba(255, 255, 255, 0.7) !important;
+        backdrop-filter: blur(10px);
     }
 
-    .hover-shadow {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    .transition-all {
+    .btn-glass-auth {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        color: #64748b !important;
+        border-radius: 50px !important;
         transition: all 0.3s ease;
+    }
+
+    .btn-glass-auth:hover {
+        background: #fff;
+        color: #000 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .hover-up:hover {
+        transform: translateY(-10px);
+        background: rgba(255,255,255,0.8);
+    }
+
+    .animate-in {
+        animation: slideIn 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        opacity: 0;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection

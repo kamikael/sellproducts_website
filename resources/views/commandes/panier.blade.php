@@ -3,237 +3,210 @@
 @section('title', 'Mon Panier')
 
 @section('content')
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="fw-bold mb-0">
-                    <i class="bi bi-cart3 text-danger me-2"></i>Mon Panier
-                </h1>
-                <a href="{{ route('vitrine.index') }}" class="btn btn-outline-danger">
-                    <i class="bi bi-arrow-left"></i> Continuer les achats
-                </a>
-            </div>
-
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4">
-                    <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show mb-4">
-                    <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(count($produits) > 0)
-                <div class="card border-0 shadow-sm mb-5">
-                    <div class="card-body p-4">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="border-0">Produit</th>
-                                        <th class="border-0">Stand</th>
-                                        <th class="border-0 text-end">Prix unitaire</th>
-                                        <th class="border-0 text-center">Quantité</th>
-                                        <th class="border-0 text-end">Sous-total</th>
-                                        <th class="border-0 text-end">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($produits as $item)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    @if($item['produit']->image_url)
-                                                        <div class="img-container me-3" style="width: 60px; height: 60px;">
-                                                            <img src="{{ $item['produit']->image_url }}"
-                                                                 alt="{{ $item['produit']->nom }}"
-                                                                 class="img-fluid rounded"
-                                                                 style="width: 100%; height: 100%; object-fit: cover;">
-                                                        </div>
-                                                    @endif
-                                                    <div>
-                                                        <strong>{{ $item['produit']->nom }}</strong>
-                                                        @if($item['produit']->description)
-                                                            <br><small class="text-muted">{{ Str::limit($item['produit']->description, 50) }}</small>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <span class="badge bg-light text-dark">
-                                                    <i class="bi bi-shop me-1"></i> {{ $item['produit']->stand->nom_stand }}
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-end">{{ number_format($item['produit']->prix, 2) }} €</td>
-                                            <td class="align-middle text-center">{{ $item['quantite'] }}</td>
-                                            <td class="align-middle text-end fw-bold text-danger">{{ number_format($item['sous_total'], 2) }} €</td>
-                                            <td class="align-middle text-end">
-                                                <form action="{{ route('commandes.supprimer-du-panier', $item['produit']) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                            onclick="return confirm('Supprimer ce produit du panier ?')">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot class="table-light">
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>Total :</strong></td>
-                                        <td class="text-end fw-bold text-danger">{{ number_format($total, 2) }} €</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <div class="d-flex justify-content-between mt-4">
-                            <form action="{{ route('commandes.vider-panier') }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-warning"
-                                        onclick="return confirm('Vider complètement le panier ?')">
-                                    <i class="bi bi-x-circle me-1"></i> Vider le panier
-                                </button>
-                            </form>
-
-                            <form action="{{ route('commandes.soumettre') }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-lg px-4">
-                                    <i class="bi bi-check-circle me-1"></i> Confirmer la commande
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="empty-state text-center py-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24" class="mb-4">
-                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-                    </svg>
-                    <h3 class="fw-light mb-3">Votre panier est vide</h3>
-                    <p class="text-muted mb-4">Découvrez nos stands et produits disponibles !</p>
-                    <a href="{{ route('vitrine.index') }}" class="btn btn-danger">
-                        <i class="bi bi-arrow-left me-1"></i> Voir la vitrine
-                    </a>
-                </div>
-            @endif
+<div class="vitrine-wrapper py-5">
+    <div class="px-5">
+        <!-- Navigation -->
+        <div class="d-flex justify-content-between align-items-center mb-5 animate-in">
+            <a href="{{ route('vitrine.index') }}#stands" class="btn btn-glass-dark px-4 rounded-pill">
+                <i class="bi bi-arrow-left me-2"></i> Continuer mes délices
+            </a>
+            <h1 class="display-5 fw-bold mb-0">Mon Panier</h1>
         </div>
-    </div>
-</div>
 
-@if(session('historique_achats'))
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-danger mb-5">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Historique de vos achats</h5>
-                    </div>
-                    <div class="card-body">
-                        @php
-                            $historique = session('historique_achats');
-                        @endphp
-                        @foreach($historique as $index => $commande)
-                            @php $totalHistorique = 0; @endphp
-                            <div class="mb-4 pb-3 border-bottom">
-                                <h6 class="fw-bold text-danger">Commande n°{{ $index + 1 }}</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-borderless">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Produit</th>
-                                                <th class="text-center">Quantité</th>
-                                                <th class="text-end">Prix unitaire</th>
-                                                <th class="text-end">Sous-total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($commande as $produitId => $quantite)
-                                                @php
-                                                    $produit = \App\Models\Produit::find($produitId);
-                                                    $sousTotal = $produit ? $produit->prix * $quantite : 0;
-                                                    $totalHistorique += $sousTotal;
-                                                @endphp
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            @if($produit && $produit->image_url)
-                                                                <div class="img-container me-3" style="width: 50px; height: 50px;">
-                                                                    <img src="{{ $produit->image_url }}"
-                                                                         alt="{{ $produit->nom }}"
-                                                                         class="img-fluid rounded"
-                                                                         style="width: 100%; height: 100%; object-fit: cover;">
-                                                                </div>
-                                                            @endif
-                                                            <div>
-                                                                {{ $produit ? $produit->nom : 'Produit supprimé' }}
-                                                                @if($produit && $produit->stand)
-                                                                    <br><small class="text-muted">{{ $produit->stand->nom_stand }}</small>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-center">{{ $quantite }}</td>
-                                                    <td class="align-middle text-end">{{ $produit ? number_format($produit->prix, 2) : '-' }} €</td>
-                                                    <td class="align-middle text-end fw-bold">{{ $produit ? number_format($sousTotal, 2) : '-' }} €</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                        <tfoot class="table-light">
-                                            <tr>
-                                                <td colspan="3" class="text-end"><strong>Total :</strong></td>
-                                                <td class="text-end fw-bold text-danger">{{ number_format($totalHistorique, 2) }} €</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+        <div class="vitrine-bg-blobs"></div>
+
+        <!-- Feedback Messages -->
+        @if(session('success'))
+            <div class="alert alert-success border-0 shadow-sm rounded-4 mb-4 animate-in">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(count($produits) > 0)
+            <div class="row g-5">
+                <!-- Basket Items -->
+                <div class="col-lg-8">
+                    <div class="basket-items-container">
+                        @foreach($produits as $item)
+                            <div class="glass-card mb-4 p-4 rounded-5 animate-card shadow-sm border border-white border-opacity-25" style="background: rgba(255,255,255,0.3); backdrop-filter: blur(15px);">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        @if($item['produit']->image_url)
+                                            <div class="rounded-4 overflow-hidden shadow-sm" style="height: 100px; width: 100px;">
+                                                <img src="{{ Str::startsWith($item['produit']->image_url, ['http://', 'https://']) ? $item['produit']->image_url : asset($item['produit']->image_url) }}" 
+                                                     class="w-100 h-100 object-fit-cover" alt="{{ $item['produit']->nom }}">
+                                            </div>
+                                        @else
+                                            <div class="bg-light rounded-4 d-flex align-items-center justify-content-center" style="height: 100px; width: 100px;">
+                                                <i class="bi bi-image text-muted opacity-25" style="font-size: 2rem;"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="fw-bold mb-1">{{ $item['produit']->nom }}</h4>
+                                        <span class="badge bg-dark rounded-pill py-2 px-3 fw-normal opacity-50">
+                                            <i class="bi bi-shop me-1"></i> {{ $item['produit']->stand->nom_stand }}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <div class="text-muted small mb-1">Quantité</div>
+                                        <div class="fw-bold fs-5">{{ $item['quantite'] }}</div>
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        <div class="text-muted small mb-1">Total</div>
+                                        <div class="fw-bold fs-5">{{ number_format($item['sous_total'], 0, ',', ' ') }} €</div>
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        <form action="{{ route('commandes.supprimer-du-panier', $item['produit']) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-link text-dark opacity-25 p-0" onclick="return confirm('Retirer ce délice ?')">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
                     </div>
-                    <div class="card-footer text-end">
-                        <form action="{{ route('commandes.vider-historique') }}" method="POST" class="d-inline">
+                    
+                    <div class="mt-4 animate-in">
+                        <form action="{{ route('commandes.vider-panier') }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-warning"
-                                    onclick="return confirm('Vider complètement l\'historique des achats ?')">
-                                <i class="bi bi-trash me-1"></i> Vider l'historique
+                            <button type="submit" class="btn btn-link text-dark fw-bold opacity-75 text-decoration-none px-0" onclick="return confirm('Vider tout votre sélection ?')">
+                                <i class="bi bi-x-lg me-2"></i> Effacer ma sélection
                             </button>
                         </form>
                     </div>
                 </div>
+
+                <!-- Summary Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sticky-top animate-in" style="top: 100px;">
+                        <div class="p-5 rounded-5 text-white shadow-xl" style="background: #000; border: 1px solid rgba(255,255,255,0.1);">
+                            <h3 class="fw-bold mb-5">Votre Sac</h3>
+                            
+                            <div class="d-flex justify-content-between mb-3 opacity-75">
+                                <span>Sous-total</span>
+                                <span>{{ number_format($total, 0, ',', ' ') }} €</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-5 fs-4 fw-bold border-top pt-4">
+                                <span>Total</span>
+                                <span class="text-white">{{ number_format($total, 0, ',', ' ') }} €</span>
+                            </div>
+
+                            <form action="{{ route('commandes.soumettre') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-light w-100 py-3 rounded-pill fw-bold fs-5 transition-all hover-scale shadow-lg">
+                                    FINALISER MON EXPÉRIENCE
+                                </button>
+                            </form>
+                            
+                            <p class="text-center mt-4 small opacity-50">
+                                <i class="bi bi-stars me-1"></i> Préparation artisanale garantie
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        @else
+            <div class="empty-state text-center py-5 animate-in">
+                <i class="bi bi-stars display-1 mb-4 opacity-25"></i>
+                <h2 class="fw-bold">Votre sac est vide</h2>
+                <p class="text-muted fs-5 mb-5">Laissez-vous tenter par nos créations artisanales.</p>
+                <a href="{{ route('vitrine.index') }}#stands" class="btn btn-dark btn-lg px-5 rounded-pill">
+                    DÉCOUVRIR L'ARTISANAT
+                </a>
+            </div>
+        @endif
+
+        @if(session('historique_achats'))
+                <div class="glass-card p-5 rounded-5 shadow-sm border border-white border-opacity-25" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h3 class="fw-bold mb-0">Historique des commandes</h3>
+                        <form action="{{ route('commandes.vider-historique') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-link text-muted p-0 text-decoration-none" onclick="return confirm('Effacer l\'historique ?')">
+                                <i class="bi bi-trash me-1"></i> Effacer tout
+                            </button>
+                        </form>
+                    </div>
+
+                    @foreach(session('historique_achats') as $index => $commande)
+                        <div class="mb-5 pb-5 {{ !$loop->last ? 'border-bottom border-white border-opacity-10' : '' }}">
+                            <h5 class="fw-bold mb-4 opacity-50">#{{ $index + 1 }} — Commande terminée</h5>
+                            <div class="table-responsive">
+                                <table class="table table-borderless align-middle">
+                                    <thead>
+                                        <tr class="text-muted small uppercase letter-spacing-1">
+                                            <th>PRODUIT</th>
+                                            <th class="text-center">QTY</th>
+                                            <th class="text-end">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $totalH = 0; @endphp
+                                        @foreach($commande as $pId => $qty)
+                                            @php
+                                                $p = \App\Models\Produit::find($pId);
+                                                $st = $p ? $p->prix * $qty : 0;
+                                                $totalH += $st;
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="fw-bold">{{ $p ? $p->nom : 'Produit supprimé' }}</div>
+                                                        @if($p && $p->stand)
+                                                            <span class="ms-2 px-2 py-0 small rounded-pill bg-dark text-white opacity-25" style="font-size: 0.7rem;">{{ $p->stand->nom_stand }}</span>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                                <td class="text-center fw-medium">{{ $qty }}</td>
+                                                <td class="text-end fw-bold">{{ number_format($st, 0, ',', ' ') }} €</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" class="text-end opacity-50">Montant payé</td>
+                                            <td class="text-end fw-bold fs-5">{{ number_format($totalH, 0, ',', ' ') }} €</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
-@endif
+</div>
 
 <style>
-    .empty-state {
-        background: #f8f9fa;
-        border-radius: 12px;
+    .glass-card {
+        transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
     }
-
-    .img-container {
-        overflow: hidden;
-        border-radius: 8px;
+    .glass-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.35) !important;
     }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(231, 76, 60, 0.05);
+    .hover-scale:hover {
+        transform: scale(1.02);
     }
-
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
+    .letter-spacing-1 {
+        letter-spacing: 1px;
+    }
+    .animate-in {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .animate-card {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection

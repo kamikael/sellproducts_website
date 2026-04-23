@@ -1,155 +1,161 @@
 @extends('layouts.app')
 
-@section('title', $stand->nom_stand . ' - Détails')
+@section('title', 'Détails du Stand')
 
 @section('content')
-<div class="container py-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between mb-5">
-                <a href="{{ route('stands.index') }}" class="btn btn-outline-danger">
-                    <i class="bi bi-arrow-left me-1"></i> Retour aux stands
-                </a>
-                <a href="{{ route('stands.edit', $stand) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-pencil me-1"></i> Modifier le stand
-                </a>
+<div class="admin-dashboard-wrapper min-vh-100 py-5" style="background: transparent; color: #1e293b; padding-top: 15rem;">
+    <div class="container-fluid px-5 py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 animate-in">
+            <div class="glass-container p-4 rounded-5 border border-white border-opacity-50">
+                <p class="text-secondary small ls-2 text-uppercase mb-2 fw-bold" style="letter-spacing: 4px;">Détails du Stand</p>
+                <h1 class="display-3 fw-bold mb-0 text-dark">{{ $stand->nom_stand }}.</h1>
+                <p class="fs-5 text-muted mt-3 fw-medium">Consultez et gérez l'inventaire spécifique de ce point de vente.</p>
             </div>
-
-            <div class="card border-0 shadow-sm mb-5">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#e74c3c" viewBox="0 0 24 24" class="me-3">
-                            <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                            <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
-                        </svg>
-                        <div>
-                            <h1 class="h2 mb-1">{{ $stand->nom_stand }}</h1>
-                           <p class="text-muted mb-0">
-    <i class="bi bi-calendar me-1"></i>
-    Créé le {{ $stand->created_at ? $stand->created_at->format('d/m/Y') : 'Date inconnue' }}
-</p>
-                        </div>
-                    </div>
-                    <p class="lead text-muted">{{ $stand->description }}</p>
+            <div class="text-end pb-3">
+                <div class="d-flex gap-3">
+                    <a href="{{ route('stands.index') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                        <i class="bi bi-arrow-left me-2"></i>RETOUR
+                    </a>
+                    <a href="{{ route('stands.edit', $stand) }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                        <i class="bi bi-pencil me-2"></i>ÉDITER LE STAND
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fw-bold mb-0">
-                    <i class="bi bi-box-seam text-danger me-2"></i>Produits du stand
-                </h2>
-                <a href="{{ route('produits.create') }}" class="btn btn-danger">
-                    <i class="bi bi-plus-circle me-1"></i> Ajouter un produit
-                </a>
+        <div class="glass-container p-5 rounded-5 shadow-sm border border-white mb-5 animate-in" style="animation-delay: 0.1s;">
+            <div class="row align-items-center">
+                <div class="col-md-auto mb-4 mb-md-0">
+                    <div class="icon-box bg-soft-primary" style="width: 80px; height: 80px;">
+                        <i class="bi bi-shop display-5"></i>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="badge glass-pill text-dark px-3 py-2 rounded-pill border border-white mb-3 text-uppercase ls-1">INFO STAND</div>
+                    <p class="fs-4 text-secondary mb-0 fw-medium">{{ $stand->description }}</p>
+                </div>
+                <div class="col-md-auto text-md-end">
+                    <p class="text-secondary small text-uppercase ls-1 mb-1">Date d'ouverture</p>
+                    <h5 class="text-dark fw-bold">{{ $stand->created_at ? $stand->created_at->format('d M Y') : 'Non définie' }}</h5>
+                </div>
             </div>
+        </div>
 
-            @if($stand->produits->count() > 0)
-                <div class="row g-4">
-                    @foreach($stand->produits as $produit)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
-                           @if($produit->image_url)
-    <div class="card-img-container" style="height: 200px;">
-        @if(filter_var($produit->image_url, FILTER_VALIDATE_URL))
-            <!-- Pour les URLs externes -->
-            <img src="{{ $produit->image_url }}"
-                 class="card-img-top"
-                 alt="{{ $produit->nom }}"
-                 style="object-position: center;">
-        @else
-            <!-- Pour les fichiers locaux -->
-            <img src="{{ asset($produit->image_url) }}"
-                 class="card-img-top"
-                 alt="{{ $produit->nom }}"
-                 style="object-position: center;">
-        @endif
-    </div>
-@else
-    <!-- Placeholder si pas d'image -->
-    <div class="card-img-container bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-    </div>
-@endif
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title mb-0">{{ $produit->nom }}</h5>
-                                        <span class="badge bg-danger">{{ number_format($produit->prix, 2) }} €</span>
-                                    </div>
-                                    <p class="card-text text-muted mb-3">{{ Str::limit($produit->description, 80) }}</p>
+        <div class="d-flex justify-content-between align-items-center mb-5 animate-in" style="animation-delay: 0.2s;">
+            <h2 class="fw-bold text-dark">Catalogue Produits</h2>
+            <a href="{{ route('produits.create') }}" class="btn btn-glass-auth fw-bold px-4">
+                <i class="bi bi-plus-circle me-2"></i>AJOUTER UN PRODUIT
+            </a>
+        </div>
 
-                                    <div class="d-flex justify-content-between">
-                                        <a href="{{ route('produits.edit', $produit) }}" class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-pencil me-1"></i> Modifier
-                                        </a>
-                                        <form action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
-                                                <i class="bi bi-trash me-1"></i> Supprimer
-                                            </button>
-                                        </form>
+        @if($stand->produits->count() > 0)
+            <div class="row g-4 animate-in" style="animation-delay: 0.3s;">
+                @foreach($stand->produits as $produit)
+                    <div class="col-md-6 col-lg-4">
+                        <div class="glass-container p-0 rounded-5 shadow-sm border border-white h-100 transition-all hover-up overflow-hidden">
+                            @if($produit->image_url)
+                                <div class="card-img-container" style="height: 250px; position: relative;">
+                                    <img src="{{ filter_var($produit->image_url, FILTER_VALIDATE_URL) ? $produit->image_url : asset($produit->image_url) }}" 
+                                         class="w-100 h-100 object-fit-cover transition-all" alt="{{ $produit->nom }}">
+                                    <div class="position-absolute top-0 end-0 p-3">
+                                        <span class="badge glass-pill text-dark px-3 py-2 rounded-pill shadow-sm">{{ number_format($produit->prix, 2) }} €</span>
                                     </div>
+                                </div>
+                            @else
+                                <div class="card-img-container bg-white bg-opacity-50 d-flex flex-column align-items-center justify-content-center" style="height: 250px;">
+                                    <i class="bi bi-image text-secondary opacity-25 mb-2" style="font-size: 3rem;"></i>
+                                    <span class="text-secondary small fw-bold">AUCUNE IMAGE</span>
+                                    <div class="position-absolute top-0 end-0 p-3">
+                                        <span class="badge glass-pill text-dark px-3 py-2 rounded-pill shadow-sm">{{ number_format($produit->prix, 2) }} €</span>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="p-5">
+                                <h3 class="fw-bold text-dark mb-2">{{ $produit->nom }}</h3>
+                                <p class="text-secondary mb-4">{{ Str::limit($produit->description, 100) }}</p>
+
+                                <div class="d-flex gap-3 pt-3 border-top border-white border-opacity-50">
+                                    <a href="{{ route('produits.edit', $produit) }}" class="btn btn-glass-auth flex-grow-1 text-center py-2">
+                                        <i class="bi bi-pencil me-1"></i> ÉDITER
+                                    </a>
+                                    <form action="{{ route('produits.destroy', $produit) }}" method="POST" class="flex-grow-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-glass-auth w-100 text-center py-2" onclick="return confirm('Supprimer ce produit ?')">
+                                            <i class="bi bi-trash me-1"></i> SUPPRIMER
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state text-center py-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24" class="mb-4">
-                        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                    </svg>
-                    <h3 class="fw-light mb-3">Aucun produit dans ce stand</h3>
-                    <p class="text-muted mb-4">Ajoutez votre premier produit pour commencer à vendre</p>
-                    <a href="{{ route('produits.create') }}" class="btn btn-danger">
-                        <i class="bi bi-plus-circle me-1"></i> Ajouter un produit
-                    </a>
-                </div>
-            @endif
-        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="glass-container p-5 rounded-5 text-center animate-in">
+                <i class="bi bi-box-seam display-2 text-secondary opacity-25 mb-4"></i>
+                <h3 class="text-secondary fw-bold">Catalogue vide</h3>
+                <p class="text-muted">Ce stand ne contient aucun produit pour le moment.</p>
+            </div>
+        @endif
     </div>
 </div>
+@endsection
 
+@section('styles')
 <style>
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .ls-1 { letter-spacing: 1px; }
+    .ls-2 { letter-spacing: 2px; }
+    
+    .glass-container {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        transition: all 0.4s ease;
     }
 
-    .card-img-container {
-        overflow: hidden;
+    .icon-box {
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 20px; background: rgba(244, 118, 104, 0.1); color: #f47668;
     }
 
-    .card-img-top {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
+    .bg-soft-primary { background: rgba(244, 118, 104, 0.1); color: #f47668; }
+
+    .glass-pill {
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(10px);
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
-    }
-
-    .card:hover .card-img-top {
-        transform: scale(1.05);
-    }
-
-    .empty-state {
-        background: #f8f9fa;
-        border-radius: 12px;
-    }
-
-    .hover-shadow {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    .transition-all {
+    .btn-glass-auth {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        color: #64748b !important;
+        border-radius: 50px !important;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    .btn-glass-auth:hover {
+        background: #fff; color: #000 !important;
+        transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .hover-up:hover { transform: translateY(-10px); background: rgba(255,255,255,0.8); }
+    .hover-up:hover img { transform: scale(1.05); }
+
+    .animate-in {
+        animation: slideIn 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        opacity: 0;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +26,7 @@
 
         .navbar {
             background-color: white !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 1.5rem 0;
             position: relative;
             z-index: 100;
@@ -39,6 +40,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .auth-hero-section {
+            padding-top: 15rem;
+            padding-bottom: 8rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-glass-auth {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+            color: #64748b !important;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-glass-auth:hover {
+            background: rgba(255, 255, 255, 0.8);
+            color: #1e293b !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
 
         .hero-video {
@@ -58,28 +89,40 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5); /* Darkened for better contrast */
+            background: rgba(0, 0, 0, 0.5);
+            /* Darkened for better contrast */
             z-index: 2;
         }
 
         /* Buttons Style */
-        .btn-glass, .btn-primary, .btn-danger, .btn-outline-danger, .btn-outline-dark, .navbar .btn {
+        .btn-glass,
+        .btn-primary,
+        .btn-danger,
+        .btn-outline-danger,
+        .btn-outline-dark,
+        .navbar .btn {
             font-family: 'Syne', sans-serif;
             background: transparent !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            border: none !important; /* No border as requested */
-            color: white !important;
+            border: none !important;
+            /* No border as requested */
+            color: #64748b !important;
             border-radius: 30px !important;
             padding: 5px 15px !important;
             font-size: 0.85rem !important;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
             text-transform: none;
             box-shadow: none !important;
         }
 
-        .btn-glass:hover, .btn-primary:hover, .btn-danger:hover, .btn-outline-danger:hover, .btn-outline-dark:hover, .navbar .btn:hover {
+        .btn-glass:hover,
+        .btn-primary:hover,
+        .btn-danger:hover,
+        .btn-outline-danger:hover,
+        .btn-outline-dark:hover,
+        .navbar .btn:hover {
             background: rgba(255, 255, 255, 0.1) !important;
             border: 1px solid rgba(255, 255, 255, 0.5) !important;
             transform: translateY(-1px);
@@ -110,7 +153,8 @@
             -webkit-backdrop-filter: none !important;
             box-shadow: none !important;
             border-bottom: none !important;
-            padding: 0.5rem 0; /* Minimal height */
+            padding: 0.5rem 0;
+            /* Minimal height */
             position: fixed;
             width: 100%;
             top: 0;
@@ -119,12 +163,23 @@
         }
 
         .navbar.scrolled {
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(15px) !important;
-            -webkit-backdrop-filter: blur(15px) !important;
-            padding: 0.3rem 0;
+            background: rgba(255, 255, 255, 0.4) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            padding: 10px 0;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .navbar.scrolled .navbar-brand,
+        .navbar.scrolled .nav-link,
+        .navbar.scrolled .btn:not(.btn-primary):not(.btn-danger) {
+            color: #000 !important;
+            /* Dark text for readable header */
+        }
+
+        .navbar.scrolled .btn-outline-dark {
+            border-color: rgba(0, 0, 0, 0.2) !important;
         }
 
         .navbar-brand {
@@ -132,7 +187,8 @@
             color: white !important;
             font-size: 1.9rem;
             font-weight: 800;
-            letter-spacing: -2px; /* Very tight as per Syne aesthetic */
+            letter-spacing: -2px;
+            /* Very tight as per Syne aesthetic */
             margin-right: auto;
             transition: all 0.3s ease;
             text-transform: uppercase;
@@ -142,12 +198,15 @@
             color: #333 !important;
         }
 
-        .navbar.scrolled .btn, .navbar.scrolled .nav-link {
-            color: #777 !important; /* Gray text as requested */
+        .navbar.scrolled .btn,
+        .navbar.scrolled .nav-link {
+            color: #777 !important;
+            /* Gray text as requested */
         }
 
         .navbar-nav {
-            margin-left: auto !important; /* Push nav list to right */
+            margin-left: auto !important;
+            /* Push nav list to right */
         }
 
         .navbar .nav-link {
@@ -166,9 +225,10 @@
             bottom: 30px;
             right: 30px;
             width: 60px;
-            height: 600px; /* Placeholder to match structure? No, let's make it a circle */
+            height: 600px;
+            /* Placeholder to match structure? No, let's make it a circle */
         }
-        
+
         .sound-toggle {
             position: fixed !important;
             bottom: 30px;
@@ -183,11 +243,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #000; /* Black icon */
+            color: #000;
+            /* Black icon */
             cursor: pointer;
             z-index: 9999;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .sound-toggle:hover {
@@ -210,7 +271,8 @@
             background: #000;
             z-index: 9999;
             overflow: hidden;
-            padding: 20px; /* Slight padding to reduce size */
+            padding: 20px;
+            /* Slight padding to reduce size */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -246,12 +308,14 @@
             visibility: hidden;
         }
 
-        body.loaded .hero-section, body.loaded .navbar {
+        body.loaded .hero-section,
+        body.loaded .navbar {
             opacity: 1;
             visibility: visible;
         }
 
-        .hero-section, .navbar {
+        .hero-section,
+        .navbar {
             opacity: 0;
             visibility: hidden;
             transition: opacity 1s ease-in-out;
@@ -262,9 +326,10 @@
             background-attachment: fixed !important;
             font-family: 'Syne', sans-serif;
             padding-top: 0;
-            overflow: hidden; /* Prevent scroll during preloader */
+            overflow-x: hidden;
+            /* Fix horizontal scroll */
         }
-        
+
         body.loaded {
             overflow: auto;
         }
@@ -321,8 +386,17 @@
         .product-preview {
             background: rgba(255, 255, 255, 0.1) !important;
             border-radius: 12px;
-            padding: 10px;
+            padding: 15px;
+            /* More padding */
             margin-top: 15px;
+            font-size: 1.1rem;
+            /* Larger text */
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            /* Larger stand title */
+            font-weight: 700;
         }
 
         /* Minimalist Search */
@@ -385,77 +459,109 @@
 
 
         footer {
-            background-color: var(--dark-color);
+            background: rgba(0, 0, 0, 0.9) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             color: white;
-            padding: 4rem 0;
+            padding: 120px 0 60px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 80px 80px 0 0;
+            /* Massive top radius */
+            font-family: 'Syne', sans-serif;
+            margin-top: -40px;
+            /* Overlap with video slightly if wanted */
+            position: relative;
+            z-index: 5;
         }
 
         .footer-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: inline-block;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
         }
 
-        .footer-title::after {
-            content: '';
-            position: absolute;
-            width: 50px;
-            height: 3px;
-            background: var(--primary-color);
-            bottom: -10px;
-            left: 0;
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            padding-top: 50px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0.5;
+            font-size: 0.9rem;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body class="{{ Route::currentRouteName() == 'vitrine.index' ? 'intro-active' : 'loaded' }}">
     <div id="preloader">
         <div class="preloader-gallery" id="pgallery">
             @php
                 $dir = public_path('storage/img');
                 $files = glob($dir . '/*.{jpeg,jpg,png,webp}', GLOB_BRACE);
-                $all_images = array_map(function($path) {
+                $all_images = array_map(function ($path) {
                     return basename($path);
                 }, $files);
                 shuffle($all_images);
                 // Limit to 10 images for 2 rows of 5 (Portrait aspect)
                 $images = array_slice($all_images, 0, 10);
             @endphp
-            @foreach($images as $index => $img)
-                <img src="{{ asset('storage/img/'.$img) }}" class="preloader-img" 
-                     style="transition-delay: {{ $index * 0.1 }}s">
+            @foreach ($images as $index => $img)
+                <img src="{{ asset('storage/img/' . $img) }}" class="preloader-img"
+                    style="transition-delay: {{ $index * 0.1 }}s">
             @endforeach
         </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="/">Eat&Drink</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
                     <li class="nav-item">
-                        <a class="btn {{ request()->is('/') ? 'btn-primary' : 'btn-outline-dark' }}" href="/">Accueil</a>
+                        <a class="btn {{ request()->is('/') ? 'btn-primary' : 'btn-outline-dark' }}"
+                            href="/">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-dark" href="{{ route('commandes.panier') }}">
-                            <i class="bi bi-cart3"></i> Panier
-                            @if(session('panier') && count(session('panier')) > 0)
-                                <span class="badge bg-danger ms-1 text-white">{{ count(session('panier')) }}</span>
+                        <a class="btn {{ request()->routeIs('commandes.panier') ? 'btn-primary' : 'btn-outline-dark' }} position-relative"
+                            href="{{ route('commandes.panier') }}">
+                            <i class="bi bi-basket-fill"></i> Panier
+                            @if (session('panier') && count(session('panier')) > 0)
+                                <span
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light">
+                                    {{ array_sum(session('panier')) }}
+                                    <span class="visually-hidden">produits dans le panier</span>
+                                </span>
                             @endif
                         </a>
                     </li>
 
                     @guest
                         <li class="nav-item">
-                            <a class="btn {{ request()->routeIs('register') ? 'btn-primary' : 'btn-outline-dark' }}" href="{{ route('register') }}">
+                            <a class="btn {{ request()->routeIs('register') ? 'btn-primary' : 'btn-outline-dark' }}"
+                                href="{{ route('register') }}">
                                 <i class="bi bi-shop"></i> Demande de stand
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn {{ request()->routeIs('login') ? 'btn-primary' : 'btn-outline-dark' }}" href="{{ route('login') }}">
+                            <a class="btn {{ request()->routeIs('login') ? 'btn-primary' : 'btn-outline-dark' }}"
+                                href="{{ route('login') }}">
                                 <i class="bi bi-box-arrow-in-right"></i> Accès stand
                             </a>
                         </li>
@@ -475,37 +581,37 @@
             </div>
         </div>
     </nav>
-    @if (in_array(Route::currentRouteName(), ['vitrine.index', 'stands.index', 'admin.index']))
-    {{-- Hero section for Guests --}}
-       @guest
-        <section class="hero-section">
-            <video autoplay loop playsinline class="hero-video">
-                <source src="{{ asset('storage/video/banniere.mp4') }}" type="video/mp4">
-            </video>
-            <div class="hero-overlay"></div>
-            <div class="sound-toggle" id="soundToggle">
-                <i class="bi bi-volume-up-fill" id="soundIcon"></i>
-            </div>
-        </section>
-    @endguest
+    @if (in_array(Route::currentRouteName(), ['vitrine.index', 'stands.index']))
+        {{-- Hero section for Guests --}}
+        @guest
+            <section class="hero-section">
+                <video autoplay loop playsinline class="hero-video">
+                    <source src="{{ asset('storage/video/banniere.mp4') }}" type="video/mp4">
+                </video>
+                <div class="hero-overlay"></div>
+                <div class="sound-toggle" id="soundToggle">
+                    <i class="bi bi-volume-up-fill" id="soundIcon"></i>
+                </div>
+            </section>
+        @endguest
 
         @auth
-        <section class="auth-hero-section">
-            <div class="container">
-                @if(auth()->user()->role == 'admin')
-                    <h1 class="display-4 fw-bold">Bienvenue, Administrateur !</h1>
-                    <p class="lead">Gérez les stands, les utilisateurs et l'ensemble de la plateforme Eat&Drink.</p>
-                    <a href="{{ route('admin.index') }}" class="btn btn-primary mt-3">Accéder au tableau de bord</a>
-                @elseif(auth()->user()->role == 'entrepreneur_en_attente')
-                    <h1 class="display-4 fw-bold">Bienvenue, Entrepreneur !</h1>
-                    <p class="lead">Votre demande de stand est en cours de traitement.</p>
-                @else
-                    <h1 class="display-4 fw-bold">Bienvenue, {{ auth()->user()->name }} !</h1>
-                    <p class="lead">Gérez votre stand, vos produits et suivez vos commandes.</p>
-                    <a href="{{ route('stands.index') }}" class="btn btn-primary mt-3">Accéder à mon espace</a>
-                @endif
-            </div>
-        </section>
+            <section class="auth-hero-section">
+                <div class="container">
+                    @if (auth()->user()->role == 'admin')
+                        <h1 class="display-4 fw-bold">Bienvenue, Administrateur !</h1>
+                        <p class="lead text-secondary">Gérez les stands, les utilisateurs et l'ensemble de la plateforme Eat&Drink.</p>
+                        <a href="{{ route('admin.index') }}" class="btn btn-glass-auth mt-3">Accéder au tableau de bord</a>
+                    @elseif(auth()->user()->role == 'entrepreneur_en_attente')
+                        <h1 class="display-4 fw-bold">Bienvenue, Entrepreneur !</h1>
+                        <p class="lead text-secondary">Votre demande de stand est en cours de traitement.</p>
+                    @else
+                        <h1 class="display-4 fw-bold">Bienvenue, {{ auth()->user()->name }} !</h1>
+                        <p class="lead text-secondary">Gérez votre stand, vos produits et suivez vos commandes.</p>
+                        <a href="{{ route('stands.index') }}" class="btn btn-glass-auth mt-3">Accéder à mon espace</a>
+                    @endif
+                </div>
+            </section>
         @endauth
     @endif
 
@@ -513,26 +619,52 @@
         @yield('content')
     </main>
 
-    <footer class="text-center text-lg-start">
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-5 mb-lg-0 text-lg-start">
-                    <h3 class="footer-title">Eat&Drink</h3>
-                    <p>L'excellence artisanale au service de votre plaisir culinaire.</p>
+            <div class="row section-padding">
+                <div class="col-lg-5 mb-5 mb-lg-0">
+                    <h2 class="footer-title">Eat&Drink</h2>
+                    <p class="lead opacity-75 mb-4" style="max-width: 400px;">Découvrez l'élite de l'artisanat
+                        culinaire. Une vitrine immersive dédiée aux passionnés du goût et du savoir-faire authentique.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="btn btn-outline-light rounded-circle p-2"
+                            style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i
+                                class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light rounded-circle p-2"
+                            style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i
+                                class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-outline-light rounded-circle p-2"
+                            style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"><i
+                                class="bi bi-whatsapp"></i></a>
+                    </div>
                 </div>
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <h3 class="footer-title">Horaires</h3>
-                    <p>Vendredi à Samedi: 9h - 20h<br>Dimanche: 9h - 18h</p>
+                <div class="col-lg-2 mb-5 mb-lg-0">
+                    <h4 class="fw-bold mb-4">Naviguer</h4>
+                    <a href="{{ route('vitrine.index') }}#stands" class="footer-link">La Vitrine</a>
+                    <a href="{{ route('login') }}" class="footer-link">Accès Stand</a>
+                    <a href="{{ route('register') }}" class="footer-link">Nous Rejoindre</a>
                 </div>
-                <div class="col-lg-4 text-lg-start">
-                    <h3 class="footer-title">Contact</h3>
-                    <p><i class="bi bi-envelope me-2"></i> contact@eatdrink.com<br>
-                    <i class="bi bi-phone me-2"></i> +229 01 46 86 25 36</p>
+                <div class="col-lg-2 mb-5 mb-lg-0">
+                    <h4 class="fw-bold mb-4">Infos</h4>
+                    <p class="opacity-50">Lieu d'exception<br>Cotonou, Bénin</p>
+                    <p class="opacity-50">Weekend: 9h - 22h</p>
+                </div>
+                <div class="col-lg-3">
+                    <h4 class="fw-bold mb-4">Contact</h4>
+                    <p class="mb-1">Des questions ?</p>
+                    <a href="mailto:contact@eatdrink.com"
+                        class="footer-link fs-5 fw-bold text-white">contact@eatdrink.com</a>
+                    <p class="mt-3 opacity-50">+229 01 46 86 25 36</p>
                 </div>
             </div>
-            <hr class="my-5 bg-light">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2023 Eat&Drink. Tous droits réservés.</p>
+
+            <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <p class="mb-0">&copy; 2024 Eat&Drink platform. Crafted for excellence.</p>
+                <div class="d-flex gap-4">
+                    <a href="#" class="footer-link mb-0" style="font-size: 0.8rem;">Mentions Légales</a>
+                    <a href="#" class="footer-link mb-0" style="font-size: 0.8rem;">Confidentialité</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -544,7 +676,7 @@
             const body = document.body;
             const imgs = document.querySelectorAll('.preloader-img');
             const preloader = document.querySelector('#preloader');
-            
+
             if (body.classList.contains('intro-active')) {
                 const centerX = window.innerWidth / 2;
                 const centerY = window.innerHeight / 2;
@@ -580,7 +712,8 @@
                             const endX = centerX - imgCenterX;
                             const endY = centerY - imgCenterY;
                             img.style.transition = "all 0.8s cubic-bezier(0.7, 0, 0.3, 1)";
-                            img.style.transform = `translate(${endX}px, ${endY}px) scale(0)`;
+                            img.style.transform =
+                            `translate(${endX}px, ${endY}px) scale(0)`;
                             img.style.opacity = "0";
                         }, i * 80);
                     });
@@ -595,11 +728,21 @@
 
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
+            // On non-home pages, keep it scrolled/sticky by default
+            const isHome = {{ request()->routeIs('vitrine.index') ? 'true' : 'false' }};
+
+            if (window.scrollY > 50 || !isHome) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        // Initialize state
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.querySelector('.navbar');
+            const isHome = {{ request()->routeIs('vitrine.index') ? 'true' : 'false' }};
+            if (!isHome) navbar.classList.add('scrolled');
         });
 
         // Fix for video freezing on scroll and hover sound
@@ -610,11 +753,11 @@
             // Sound Toggle Logic
             const soundToggle = document.getElementById('soundToggle');
             const soundIcon = document.getElementById('soundIcon');
-            
+
             if (soundToggle && video) {
                 // Load state from sessionStorage
                 const isMuted = sessionStorage.getItem('videoMuted');
-                
+
                 if (isMuted === 'true') {
                     video.muted = true;
                     soundIcon.classList.replace('bi-volume-up-fill', 'bi-volume-mute-fill');
@@ -651,4 +794,5 @@
         }
     </script>
 </body>
+
 </html>

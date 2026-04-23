@@ -4,9 +4,9 @@
 
 @section('content')
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
+<div class="vitrine-wrapper py-5">
+    <div class="px-5">
+        <div class="">
             <div class="text-center mb-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#e74c3c" viewBox="0 0 24 24" class="mb-3">
                     <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
@@ -18,8 +18,8 @@
             </div>
 
             <div class="vitrine-bg-blobs"></div>
-            <div class="row justify-content-center mb-5">
-                <div class="col-md-8">
+            <div class="mb-5">
+                <div class="w-100">
                     <form action="{{ route('vitrine.recherche') }}" method="GET" class="search-form-minimal">
                         <div class="search-input-group">
                             <input type="text" name="q" class="search-input"
@@ -33,9 +33,9 @@
             </div>
 
             @if($stands->count() > 0)
-                <div class="row g-4">
+                <div class="stands-masonry-grid">
                     @foreach($stands as $stand)
-                        <div class="col-md-6 col-lg-4">
+                        <div class="masonry-item">
                             <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
                                 @if($stand->produits->first() && $stand->produits->first()->image_url)
                                     <div class="card-img-container">
@@ -93,10 +93,83 @@
                     <i class="bi bi-search-heart display-1 mb-4" style="color: rgba(0,0,0,0.1)"></i>
                     <h4 class="fw-light mb-3">Aucun résultat trouvé</h4>
                     <p class="text-muted">Aucun stand ou produit ne correspond à votre recherche "{{ $query }}".</p>
-                    <a href="{{ route('vitrine.index') }}" class="btn btn-glass-dark px-5 mt-3">Retourner à la vitrine</a>
+                    <a href="{{ route('vitrine.index') }}#stands" class="btn btn-glass-dark px-5 mt-3">Retourner à la vitrine</a>
                 </div>
             @endif
         </div>
     </div>
+    <style>
+    /* Staggered Grid (Middle Higher) */
+    .stands-masonry-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        width: 100%;
+        padding-top: 50px;
+    }
+
+    @media (max-width: 1100px) {
+        .stands-masonry-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .stands-masonry-grid { grid-template-columns: 1fr; }
+    }
+
+    .masonry-item {
+        width: 100%;
+        transition: transform 0.6s ease-out;
+    }
+
+    /* Target the middle column in a 3-column desktop layout */
+    @media (min-width: 1101px) {
+        .masonry-item:nth-child(3n+2) {
+            transform: translateY(-40px); /* Lift middle column */
+        }
+    }
+
+    .card-img-container {
+        height: auto;
+        max-height: 350px;
+        min-height: 180px;
+        overflow: hidden;
+        background: rgba(0,0,0,0.03);
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        max-height: 350px;
+        object-fit: cover;
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.querySelector('.vitrine-wrapper');
+            const video = document.getElementById('video-section');
+            const thresholds = {
+                vitrine: 50, // Immediate trigger for other views
+                video: 99999
+            };
+
+            const header = document.querySelector('.text-center.mb-5');
+            if (header) {
+                // Prepare header for sidebar transition
+                header.id = "vitrineHeader";
+                header.classList.add('vitrine-intro-container');
+                const inner = header.firstElementChild.parentElement;
+                inner.classList.add('intro-content');
+                inner.firstElementChild.classList.add('vitrine-title');
+            }
+
+            document.addEventListener('scroll', function() {
+                const scrollPos = window.scrollY;
+
+                if (scrollPos > thresholds.vitrine) {
+                    wrapper.classList.add('side-active');
+                } else {
+                    wrapper.classList.remove('side-active');
+                }
+            });
+        });
+    </script>
 </div>
 @endsection

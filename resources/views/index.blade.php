@@ -17,7 +17,7 @@
         <div class="vitrine-content-area">
             <!-- Barre de recherche améliorée -->
             <!-- Placeholder for search bar stable height -->
-            <div class="search-placeholder" style="min-height: 150px;">
+            <div class="search-placeholder" id="stands" style="min-height: 150px;">
                 <div class="search-sticky-container">
                     <div class="row justify-content-center mb-5 search-row">
                         <div class="col-md-10">
@@ -36,100 +36,113 @@
             </div>
 
             @if ($stands->count() > 0)
-                    <div class="row g-4">
-                        @foreach ($stands as $stand)
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
-                                    @if ($stand->produits->first() && $stand->produits->first()->image_url)
-                                        <div class="card-img-container">
-                                            <img src="{{ Str::startsWith($stand->produits->first()->image_url, ['http://', 'https://'])
-                                                ? $stand->produits->first()->image_url
-                                                : asset($stand->produits->first()->image_url) }}"
-                                                class="card-img-top"
-                                                alt="Image du produit {{ $stand->produits->first()->nom }}">
+                <div class="stands-masonry-grid">
+                    @foreach ($stands as $stand)
+                        <div class="masonry-item">
+                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                                @if ($stand->produits->first() && $stand->produits->first()->image_url)
+                                    <div class="card-img-container">
+                                        <img src="{{ Str::startsWith($stand->produits->first()->image_url, ['http://', 'https://'])
+                                            ? $stand->produits->first()->image_url
+                                            : asset($stand->produits->first()->image_url) }}"
+                                            class="card-img-top"
+                                            alt="Image du produit {{ $stand->produits->first()->nom }}">
+                                    </div>
+                                @endif
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ $stand->nom_stand }}</h5>
+                                        <span class="badge btn-glass-dark fw-normal">{{ $stand->produits->count() }}
+                                            produits</span>
+                                    </div>
+                                    <p class="card-text text-muted mb-3">{{ Str::limit($stand->description, 100) }}</p>
+                                    <p class="text-muted small mb-3">
+                                        <i class="bi bi-person"></i> {{ $stand->user->name }}
+                                    </p>
+
+                                    @if ($stand->produits->count() > 0)
+                                        <div class="product-preview mb-4">
+                                            @foreach ($stand->produits->take(rand(2, 3)) as $produit)
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                                    <span>{{ $produit->nom }}</span>
+                                                    <span class="fw-bold">{{ number_format($produit->prix, 2) }}
+                                                        €</span>
+                                                </div>
+                                            @endforeach
+                                            @if ($stand->produits->count() > 3)
+                                                <div class="text-center mt-2">
+                                                    <small class="text-muted">
+                                                        + {{ $stand->produits->count() - 3 }} autres produits
+                                                    </small>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <div class="alert alert-light mb-4">
+                                            <small class="text-muted">Aucun produit disponible pour le moment</small>
                                         </div>
                                     @endif
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <h5 class="card-title mb-0">{{ $stand->nom_stand }}</h5>
-                                            <span class="badge btn-glass-dark fw-normal">{{ $stand->produits->count() }}
-                                                produits</span>
-                                        </div>
-                                        <p class="card-text text-muted mb-3">{{ Str::limit($stand->description, 100) }}</p>
-                                        <p class="text-muted small mb-3">
-                                            <i class="bi bi-person"></i> {{ $stand->user->name }}
-                                        </p>
-
-                                        @if ($stand->produits->count() > 0)
-                                            <div class="product-preview mb-4">
-                                                @foreach ($stand->produits->take(3) as $produit)
-                                                    <div
-                                                        class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                                        <span>{{ $produit->nom }}</span>
-                                                        <span class="fw-bold">{{ number_format($produit->prix, 2) }}
-                                                            €</span>
-                                                    </div>
-                                                @endforeach
-                                                @if ($stand->produits->count() > 3)
-                                                    <div class="text-center mt-2">
-                                                        <small class="text-muted">
-                                                            + {{ $stand->produits->count() - 3 }} autres produits
-                                                        </small>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <div class="alert alert-light mb-4">
-                                                <small class="text-muted">Aucun produit disponible pour le moment</small>
-                                            </div>
-                                        @endif
-                                        <a href="{{ route('vitrine.stand', $stand) }}" class="btn btn-glass-dark w-100">
-                                            <i class="bi bi-shop"></i> Visiter le stand
-                                        </a>
-                                    </div>
+                                    <a href="{{ route('vitrine.stand', $stand) }}" class="btn btn-glass-dark w-100">
+                                        <i class="bi bi-shop"></i> Visiter le stand
+                                    </a>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="empty-state text-center py-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd"
-                            viewBox="0 0 24 24" class="mb-4">
-                            <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z" />
-                            <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z" />
-                        </svg>
-                        <h4 class="fw-light mb-3">Aucun stand disponible</h4>
-                        <p class="text-muted">Les stands approuvés apparaîtront ici prochainement</p>
-                    </div>
-                @endif
-            </div> <!-- End vitrine-content-area -->
-        </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="empty-state text-center py-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24"
+                        class="mb-4">
+                        <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z" />
+                        <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z" />
+                    </svg>
+                    <h4 class="fw-light mb-3">Aucun stand disponible</h4>
+                    <p class="text-muted">Les stands approuvés apparaîtront ici prochainement</p>
+                </div>
+            @endif
+
+            <!-- Cinematic Footer Video Section -->
+            <div id="video-section" class="video-footer-container mt-2 py-4 text-center">
+                <div class="video-wrapper-inner">
+                    <video autoplay muted loop playsinline class="cinematic-video">
+                        <source src="{{ asset('storage/video/stand.mp4') }}" type="video/mp4">
+                        Votre navigateur ne supporte pas la vidéo.
+                    </video>
+                </div>
+            </div>
+        </div> <!-- End vitrine-content-area -->
+    </div>
     </div>
 
     <style>
-    .search-sticky-container {
-        transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-        z-index: 1000;
-        width: 100%;
-        height: 150px; 
-        margin-top: 50px; /* Added space for visibility */
-        margin-bottom: 50px;
-    }
+        .search-sticky-container {
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 1000;
+            width: 100%;
+            height: 150px;
+            margin-top: 50px;
+            /* Added space for visibility */
+            margin-bottom: 50px;
+        }
 
-    /* Transitioning to side view */
-    .side-active .search-input-group {
-        position: fixed;
-        right: 40px;
-        top: 100px; /* Stay near the top right, horizontal */
-        width: 300px;
-        transform: none !important; /* NO ROTATION */
-        z-index: 2005;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(15px);
-        padding: 5px 20px;
-        border-radius: 30px;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-    }
+        /* Transitioning to side view */
+        .side-active .search-input-group {
+            position: fixed;
+            right: 40px;
+            top: 100px;
+            /* Stay near the top right, horizontal */
+            width: 300px;
+            transform: none !important;
+            /* NO ROTATION */
+            z-index: 2005;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 5px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
 
         .search-form-minimal {
             width: 100%;
@@ -137,23 +150,23 @@
             margin: 0 auto;
         }
 
-    .search-input-group {
-        position: relative;
-        display: flex;
-        align-items: center;
-        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-        padding-bottom: 10px;
-        transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-    }
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-    .search-input-group:focus-within {
-        max-width: 100%;
-        border-bottom-color: #000;
-        transform: translateY(-2px);
-    }
+        .search-input-group:focus-within {
+            max-width: 100%;
+            border-bottom-color: #000;
+            transform: translateY(-2px);
+        }
 
         .search-input {
             width: 100%;
@@ -190,73 +203,150 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
 
-    .vitrine-wrapper {
-        width: 100%;
-        position: relative;
-        padding: 0 80px; /* Space for both side bars */
-        transition: all 0.7s ease;
-    }
+        .vitrine-wrapper {
+            width: 100%;
+            position: relative;
+            padding: 0 80px;
+            /* Space for both side bars */
+            transition: all 0.7s ease;
+        }
 
-    .vitrine-wrapper.side-active {
-        /* No grid here to avoid squeezing stands */
-    }
+        /* Staggered Grid (Middle Higher) */
+        .stands-masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            /* Even tighter margins */
+            width: 100%;
+            padding-top: 50px;
+        }
 
-    .vitrine-intro-container {
-        width: 100%;
-        min-height: 250px; /* RESERVED SPACE to prevent stands from jumping up */
-        padding: 60px 0;
-        text-align: center;
-        transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+        @media (max-width: 1100px) {
+            .stands-masonry-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
-    .intro-content {
-        transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-    }
+        @media (max-width: 768px) {
+            .stands-masonry-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-    /* Vertical Sidebar (when scrolling) */
-    .vitrine-wrapper.side-active .vitrine-intro-container {
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 100px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2000;
-    }
+        .masonry-item {
+            width: 100%;
+            transition: transform 0.6s ease-out;
+        }
 
-    .vitrine-wrapper.side-active .intro-content {
-        transform: rotate(-90deg);
-        white-space: nowrap;
-        text-align: center;
-    }
+        /* Target the middle column in a 3-column desktop layout */
+        @media (min-width: 1101px) {
+            .masonry-item:nth-child(3n+2) {
+                transform: translateY(-40px);
+                /* Lift middle column */
+            }
+        }
 
-    .vitrine-wrapper.side-active .search-sticky-container {
-        position: fixed;
-        right: 40px;
-        top: 100px;
-        width: auto;
-        transform: none !important;
-        z-index: 2001;
-    }
+        .card-img-container {
+            height: auto;
+            max-height: 350px;
+            /* Prevent "double height" images */
+            min-height: 180px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.03);
+        }
 
-    .side-active .search-input-group {
-        max-width: 250px;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(15px);
-        padding: 5px 20px;
-        border-radius: 30px;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-    }
+        /* Cinematic Video Footer - FULL WIDTH REFINED */
+        .video-footer-container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 50px auto;
+            /* Centered with top/bottom margin */
+            padding: 0 20px;
+        }
 
-    .side-active .search-input-group:focus-within {
-        max-width: 700px; /* Even longer as requested */
-    }
+        .video-wrapper-inner {
+            position: relative;
+            width: 100%;
+            border-radius: 60px;
+            /* Big radius for the video back */
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+        }
+
+        .cinematic-video {
+            width: 100%;
+            height: 700px;
+            /* Increased height again */
+            object-fit: cover;
+        }
+
+        .video-overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: 100%;
+        }
+
+        .vitrine-intro-container {
+            width: 100%;
+            min-height: 250px;
+            /* RESERVED SPACE to prevent stands from jumping up */
+            padding: 60px 0;
+            text-align: center;
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .intro-content {
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Vertical Sidebar (when scrolling) */
+        .vitrine-wrapper.side-active .vitrine-intro-container {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .vitrine-wrapper.side-active .intro-content {
+            transform: rotate(-90deg);
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .vitrine-wrapper.side-active .search-sticky-container {
+            position: fixed;
+            right: 40px;
+            top: 100px;
+            width: auto;
+            transform: none !important;
+            z-index: 2001;
+        }
+
+        .side-active .search-input-group {
+            max-width: 250px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 5px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .side-active .search-input-group:focus-within {
+            max-width: 700px;
+            /* Even longer as requested */
+        }
 
         .vitrine-title {
             font-size: 6.5rem;
@@ -281,12 +371,31 @@
 
         .vitrine-wrapper.side-active .vitrine-title {
             font-size: 2.2rem !important;
-            /* Reverted to smaller vertical size */
             font-weight: 800;
             margin: 0 !important;
-            opacity: 0.9;
+            opacity: 0.8;
             letter-spacing: 2px;
             text-align: center;
+        }
+
+        /* Zero-Bug Fade Out Strategy */
+        .side-hide .vitrine-intro-container,
+        .side-hide .search-sticky-container {
+            opacity: 0 !important;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.5s ease !important;
+        }
+
+        .vitrine-intro-container, .search-sticky-container {
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
+        }
+
+        .vitrine-wrapper.side-active .vitrine-desc {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.6;
+            margin-top: 5px;
         }
 
         .vitrine-wrapper.side-active .vitrine-desc {
@@ -402,12 +511,22 @@
     <script>
         // Calculate threshold once to avoid infinite loops when elements become fixed
         let vitrineThreshold = 0;
+        let videoThreshold = 0;
+        let isActive = false;
+
         const updateThreshold = () => {
             const header = document.getElementById('vitrineHeader');
+            const video = document.getElementById('video-section');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
             if (header) {
-                // Ensure the Hero banner (window height) is passed before activating
-                const bannerHeight = window.innerHeight;
-                vitrineThreshold = Math.max(header.offsetTop - 100, bannerHeight);
+                const headerRect = header.parentElement.getBoundingClientRect();
+                vitrineThreshold = (headerRect.top + scrollTop) + 150;
+            }
+            if (video) {
+                const videoRect = video.getBoundingClientRect();
+                // Store the absolute top position of the video
+                videoThreshold = (videoRect.top + scrollTop) - 450;
             }
         };
 
@@ -416,10 +535,26 @@
 
         document.addEventListener('scroll', function() {
             const wrapper = document.querySelector('.vitrine-wrapper');
-            if (window.scrollY > vitrineThreshold && vitrineThreshold > 0) {
+            const video = document.getElementById('video-section');
+            if (!wrapper) return;
+
+            const scrollPos = window.scrollY;
+
+            // 1. Fixed positioning trigger (remains active once reached)
+            if (scrollPos > vitrineThreshold) {
                 wrapper.classList.add('side-active');
             } else {
                 wrapper.classList.remove('side-active');
+            }
+
+            // 2. Visual Fade-Out trigger (when nearing video)
+            if (video) {
+                const rect = video.getBoundingClientRect();
+                if (rect.top < 600) { // Use viewport relative position (bug-free)
+                    wrapper.classList.add('side-hide');
+                } else {
+                    wrapper.classList.remove('side-hide');
+                }
             }
         });
 

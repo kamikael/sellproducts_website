@@ -4,86 +4,85 @@
 @section('title', $stand->nom_stand . ' - Vitrine')
 
 @section('content')
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <!-- Navigation améliorée -->
-            <div class="d-flex justify-content-between mb-5">
-                <a href="{{ route('vitrine.index') }}" class="btn btn-outline-danger">
-                    <i class="bi bi-arrow-left"></i> Retour à la vitrine
-                </a>
-                <a href="{{ route('commandes.panier') }}" class="btn btn-danger">
-                    <i class="bi bi-cart"></i> Mon Panier
-                </a>
-            </div>
+    <div class="vitrine-wrapper py-5">
+        <div class="px-5">
+            <!-- Return & Stand Header Row -->
+            <div class="d-flex align-items-center justify-content-between mb-5 animate-in">
+                <div class="d-flex align-items-center">
+                    <a href="{{ route('vitrine.index') }}#stands" class="btn btn-glass-dark px-4 rounded-pill me-4">
+                        <i class="bi bi-arrow-left me-2"></i> Retour
+                    </a>
 
-            <!-- Message de succès -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4">
-                    <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <!-- Informations du stand -->
-            <div class="card border-0 shadow-sm mb-5">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#e74c3c" viewBox="0 0 24 24" class="me-3">
-                            <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                            <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
+                    <div class="d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#e74c3c"
+                            viewBox="0 0 24 24" class="me-3">
+                            <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z" />
+                            <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z" />
                         </svg>
                         <div>
-                            <h1 class="h2 mb-1">{{ $stand->nom_stand }}</h1>
-                            <p class="text-muted mb-0">
-                                <i class="bi bi-person"></i> {{ $stand->user->name }}
-                            </p>
+                            <h1 class="h4 mb-0 fw-bold d-inline-block me-2">{{ $stand->nom_stand }}</h1>
+                            <span class="text-muted small">| Par <strong>{{ $stand->user->name }}</strong></span>
                         </div>
                     </div>
-                    <p class="lead text-muted mb-0">{{ $stand->description }}</p>
                 </div>
             </div>
 
-            <!-- Produits du stand -->
-            <div class="mb-4">
-                <h2 class="fw-bold mb-4">Produits disponibles</h2>
+            <div class="glass-desc-box p-3 rounded-4 mb-5 animate-in"
+                style="background: rgba(0,0,0,0.03); border-left: 4px solid #000;">
+                <p class="lead mb-0 fs-6">{{ $stand->description }}</p>
+            </div>
 
-                @if($stand->produits->count() > 0)
-                    <div class="row g-4">
-                        @foreach($stand->produits as $produit)
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
-                                    @if($produit->image_url)
-                                        <div class="card-img-container" style="height: 200px;">
-                                            @if(Str::startsWith($produit->image_url, ['http://', 'https://']))
-                                                <img src="{{ $produit->image_url }}" class="card-img-top" alt="{{ $produit->nom }}" />
-                                            @else
-                                                <img src="{{ asset($produit->image_url) }}" class="card-img-top" alt="{{ $produit->nom }}" />
-                                            @endif
+            <div class="product-gallery">
+                <div class="mb-5 animate-in">
+                    <h2 class="display-5 fw-bold mb-0">Carte des Délices</h2>
+                    <p class="text-muted fs-5">Les créations de la maison</p>
+                </div>
+
+                @if ($stand->produits->count() > 0)
+                    <div class="stands-masonry-grid">
+                        @foreach ($stand->produits as $produit)
+                            <div class="masonry-item animate-card">
+                                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all premium-product-card">
+                                    @if ($produit->image_url)
+                                        <div class="card-img-container">
+                                            <img src="{{ Str::startsWith($produit->image_url, ['http://', 'https://'])
+                                                ? $produit->image_url
+                                                : asset($produit->image_url) }}"
+                                                class="card-img-top" alt="{{ $produit->nom }}">
                                         </div>
                                     @else
-                                        <div class="card-img-container bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                        <div
+                                            class="card-img-container bg-light d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-image text-muted opacity-25" style="font-size: 4rem;"></i>
                                         </div>
                                     @endif
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $produit->nom }}</h5>
-                                        <p class="card-text text-muted">{{ Str::limit($produit->description, 100) }}</p>
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="fs-4 fw-bold text-danger">{{ number_format($produit->prix, 2) }} €</span>
-                                        </div>
-                                        <form action="{{ route('commandes.ajouter-au-panier', $produit) }}" method="POST">
-                                            @csrf
-                                            <div class="row g-2">
-                                                <div class="col-7">
-                                                    <input type="number" name="quantite" class="form-control" value="1" min="1" max="99" />
-                                                </div>
-                                                <div class="col-5">
-                                                    <button type="submit" class="btn btn-danger w-100">
-                                                        <i class="bi bi-cart-plus"></i> Ajouter
-                                                    </button>
-                                                </div>
+
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <h4 class="fw-bold mb-0">{{ $produit->nom }}</h4>
+                                            <div class="product-price-tag">
+                                                {{ number_format($produit->prix, 0, ',', ' ') }} <small>€</small>
                                             </div>
+                                        </div>
+                                        <p class="text-muted mb-4 fs-6">{{ Str::limit($produit->description, 120) }}</p>
+
+                                        <form action="{{ route('commandes.ajouter-au-panier', $produit) }}" method="POST"
+                                            class="add-to-cart-form">
+                                            @csrf
+                                            <div
+                                                class="quantity-control-wrapper d-flex align-items-center justify-content-between bg-light rounded-pill p-1 mb-3">
+                                                <button type="button" class="btn btn-qty border-0 rounded-circle"
+                                                    onclick="this.nextElementSibling.stepDown()">-</button>
+                                                <input type="number" name="quantite"
+                                                    class="form-control bg-transparent border-0 text-center fw-bold fs-5"
+                                                    value="1" min="1" max="99" readonly>
+                                                <button type="button" class="btn btn-qty border-0 rounded-circle"
+                                                    onclick="this.previousElementSibling.stepUp()">+</button>
+                                            </div>
+                                            <button type="submit"
+                                                class="btn btn-dark w-100 py-3 rounded-pill fw-bold transition-all add-btn-premium">
+                                                <i class="bi bi-bag-plus me-2"></i> AJOUTER AU PANIER
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
@@ -91,60 +90,288 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="empty-state text-center py-5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#ddd" viewBox="0 0 24 24" class="mb-4">
-                            <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        </svg>
-                        <h3 class="fw-light mb-3">Aucun produit disponible</h3>
-                        <p class="text-muted mb-4">Ce stand n'a pas encore de produits à proposer</p>
-                        <a href="{{ route('vitrine.index') }}" class="btn btn-danger">
-                            <i class="bi bi-arrow-left"></i> Voir d'autres stands
-                        </a>
+                    <div class="empty-state-lux text-center py-5 rounded-5 mt-5">
+                        <i class="bi bi-stars display-1 mb-4 opacity-25"></i>
+                        <h3 class="fw-bold">Bientôt disponible</h3>
+                        <p class="text-muted">L'artisan prépare ses nouvelles créations.</p>
                     </div>
                 @endif
+            </div> <!-- End px-5 -->
+
+            <!-- Immersive Side-Scroll Video Section (Edge-to-Edge) -->
+            <div class="video-scroll-container mt-5" style="height: 300vh;">
+                <div class="sticky-video-wrapper">
+                    <div class="video-horizontal-track d-flex" id="videoTrack" style="transform: translateX(0);">
+                        @php
+                            $videos = ['foule.mp4', 'bugger-boisson.mp4', 'pizza.mp4', 'chef-food.mp4'];
+                        @endphp
+                        @foreach($videos as $video)
+                            <div class="video-full-slide">
+                                <div class="video-container-premium">
+                                    <video autoplay muted loop playsinline class="cinematic-video">
+                                        <source src="{{ asset('storage/video/' . $video) }}" type="video/mp4">
+                                    </video>
+                                    <div class="video-caption-overlay p-5 d-flex align-items-end">
+                                        <div class="animate-on-scroll p-4">
+                                            <h3 class="display-3 fw-bold text-white mb-0">L'Art Culinaire</h3>
+                                            <p class="text-white-50 fs-4 ls-2 text-uppercase">Une immersion totale</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <style>
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .video-scroll-container {
+        position: relative;
+        width: 100%;
+        overflow: visible;
     }
-
-    .card-img-container {
+    
+    .sticky-video-wrapper {
+        position: sticky;
+        top: 0;
+        height: 100vh;
         overflow: hidden;
+        background: #000;
     }
-
-    .card-img-top {
+    
+    .video-horizontal-track {
+        height: 100%;
+        width: 400%; /* 4 videos */
+        will-change: transform;
+    }
+    
+    .video-full-slide {
+        width: 100vw;
+        height: 100vh;
+        flex: 0 0 100vw;
+        padding: 5vh 5vw;
+    }
+    
+    .video-container-premium {
+        width: 100%;
+        height: 100%;
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+    }
+    
+    .cinematic-video {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
     }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    
+    .video-caption-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: linear-gradient(transparent, rgba(0,0,0,0.9));
     }
-
-    .card:hover .card-img-top {
-        transform: scale(1.05);
-    }
-
-    .empty-state {
-        background: #f8f9fa;
-        border-radius: 12px;
-    }
-
-    .hover-shadow {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    .transition-all {
-        transition: all 0.3s ease;
-    }
+    .ls-2 { letter-spacing: 5px; }
 </style>
+
+<script>
+    window.addEventListener('scroll', () => {
+        const container = document.querySelector('.video-scroll-container');
+        const track = document.getElementById('videoTrack');
+        
+        if (container && track) {
+            const containerTop = container.offsetTop;
+            const containerHeight = container.offsetHeight;
+            const scrollY = window.scrollY;
+            
+            if (scrollY >= containerTop && scrollY <= containerTop + containerHeight - window.innerHeight) {
+                const scrolled = scrollY - containerTop;
+                const percentage = (scrolled / (containerHeight - window.innerHeight)) * 100;
+                // Move track: 4 videos means we move -75% of the 400% width
+                track.style.transform = `translateX(-${(percentage / 100) * 75}%)`;
+            } else if (scrollY < containerTop) {
+                track.style.transform = `translateX(0)`;
+            }
+        }
+    });
+</script>
+
+    <style>
+        /* Premium Stand View Styles */
+        .stand-header-premium {
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stand-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Staggered Grid (Pinterest style for products) */
+        .stands-masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 1100px) {
+            .stands-masonry-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stands-masonry-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .premium-product-card {
+            border-radius: 40px !important;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.4) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .card-img-container {
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .premium-product-card:hover .card-img-top {
+            transform: scale(1.1);
+        }
+
+        .product-price-tag {
+            background: #000;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Quantity Control */
+        .quantity-control-wrapper {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-qty {
+            width: 40px;
+            height: 40px;
+            background: white;
+            color: black;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-qty:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .add-btn-premium:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations: Slide in from right staggered */
+        .animate-in {
+            animation: fadeInRight 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .animate-card {
+            animation: fadeInRight 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .video-card {
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            background: #000;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2) !important;
+        }
+
+        .video-card:hover .video-overlay {
+            opacity: 1;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .video-card video {
+            filter: brightness(0.9);
+            transition: all 0.8s ease;
+        }
+
+        .video-card:hover video {
+            filter: brightness(1.1);
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(80px) translateY(10px) rotate(2deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) translateY(0) rotate(0deg);
+            }
+        }
+
+        @for ($i = 1; $i <= 12; $i++)
+            .masonry-item:nth-child({{ $i }}) {
+                animation-delay: {{ $i * 0.2 }}s;
+            }
+        @endfor
+    </style>
+
+<script>
+    // Reveal cards one by one
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.animate-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+        
+        const navbar = document.querySelector('.navbar');
+        const videoSection = document.querySelector('.video-scroll-container');
+        
+        window.addEventListener('scroll', () => {
+            if (navbar && videoSection) {
+                const videoTop = videoSection.offsetTop;
+                if (window.scrollY > videoTop - 100) {
+                    navbar.style.transform = 'translateY(-100%)';
+                    navbar.style.transition = 'transform 0.5s ease';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+            }
+        });
+    });
+</script>
 @endsection

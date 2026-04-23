@@ -3,88 +3,118 @@
 @section('title', 'Créer un nouveau stand')
 
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card border-0 shadow-lg">
-                <div class="card-header bg-white border-0 py-4">
-                    <div class="d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#e74c3c" viewBox="0 0 24 24" class="me-3">
-                            <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                            <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
-                        </svg>
-                        <h3 class="fw-bold mb-0">Créer un nouveau stand</h3>
-                    </div>
-                </div>
-                <div class="card-body px-5 py-4">
-                    @if($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show mb-4">
-                            <i class="bi bi-exclamation-triangle me-2"></i>
-                            <strong>Veuillez corriger les erreurs suivantes :</strong>
-                            <ul class="mt-2 mb-0">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-
-                    <form action="{{ route('stands.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="nom_stand" class="form-label fw-semibold">Nom du stand <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-lg"
-                                   id="nom_stand" name="nom_stand"
-                                   value="{{ old('nom_stand') }}"
-                                   placeholder="Ex: Boulangerie du coin" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="description" class="form-label fw-semibold">Description</label>
-                            <textarea class="form-control" id="description"
-                                      name="description" rows="4"
-                                      placeholder="Décrivez votre stand en quelques mots...">{{ old('description') }}</textarea>
-                            <div class="form-text">Cette description apparaîtra dans la vitrine.</div>
-                        </div>
-
-                        <div class="d-flex justify-content-between pt-3">
-                            <a href="{{ route('stands.index') }}" class="btn btn-outline-secondary px-4">
-                                <i class="bi bi-arrow-left me-1"></i> Annuler
-                            </a>
-                            <button type="submit" class="btn btn-danger px-4">
-                                <i class="bi bi-check-circle me-1"></i> Créer le stand
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<div class="admin-dashboard-wrapper min-vh-100 py-5" style="background: transparent; color: #1e293b; padding-top: 15rem;">
+    <div class="container-fluid px-5 py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 animate-in">
+            <div class="glass-container p-4 rounded-5 border border-white border-opacity-50">
+                <p class="text-secondary small ls-2 text-uppercase mb-2 fw-bold" style="letter-spacing: 4px;">Points de Vente</p>
+                <h1 class="display-3 fw-bold mb-0 text-dark">Nouveau Stand.</h1>
+                <p class="fs-5 text-muted mt-3 fw-medium">Configurez votre nouvel espace de vente sur <span class="text-primary">Eat&Drink</span>.</p>
+            </div>
+            <div class="text-end pb-3">
+                <a href="{{ route('stands.index') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                    <i class="bi bi-arrow-left me-2"></i>ANNULER
+                </a>
             </div>
         </div>
+
+        @if($errors->any())
+            <div class="alert glass-container border-danger border-opacity-25 text-danger p-4 rounded-5 mb-5 animate-in">
+                <ul class="mb-0 small fw-bold">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('stands.store') }}" method="POST" class="animate-in" style="animation-delay: 0.1s;">
+            @csrf
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="glass-container p-4 rounded-5 border border-white h-100">
+                        <label for="nom_stand" class="form-label small fw-bold text-uppercase ls-1 text-secondary">Nom du stand</label>
+                        <input type="text" class="form-control premium-input @error('nom_stand') is-invalid @enderror" id="nom_stand" name="nom_stand" value="{{ old('nom_stand') }}" required placeholder="Ex: Ma Petite Boulangerie">
+                        @error('nom_stand') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="glass-container p-4 rounded-5 border border-white h-100">
+                        <label for="description" class="form-label small fw-bold text-uppercase ls-1 text-secondary">Description du stand</label>
+                        <textarea class="form-control premium-input @error('description') is-invalid @enderror" id="description" name="description" rows="1" placeholder="Quelques mots sur votre stand...">{{ old('description') }}</textarea>
+                        @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 mt-5">
+                <button type="submit" class="btn btn-glass-auth px-5 py-3 fw-bold">
+                    <i class="bi bi-check2-circle me-2"></i>OUVRIR LE STAND
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+@endsection
 
+@section('styles')
 <style>
-    .card {
-        border-radius: 12px;
-        overflow: hidden;
+    .ls-1 { letter-spacing: 1px; }
+    .ls-2 { letter-spacing: 2px; }
+    
+    .glass-container {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        transition: all 0.3s ease;
     }
 
-    .form-control-lg {
-        padding: 12px 16px;
-        border-radius: 8px;
+    .premium-input {
+        background: rgba(255, 255, 255, 0.5) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        border-radius: 15px !important;
+        padding: 12px 15px !important;
+        color: #1e293b !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
     }
 
-    textarea.form-control {
-        min-height: 120px;
+    .premium-input:focus {
+        background: #fff !important;
+        border-color: #f47668 !important;
+        box-shadow: 0 0 15px rgba(244, 118, 104, 0.1) !important;
     }
 
-    .btn {
-        border-radius: 8px;
-        padding: 10px 20px;
+    .btn-glass-auth {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        color: #64748b !important;
+        border-radius: 50px !important;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
     }
 
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,0.05);
+    .btn-glass-auth:hover {
+        background: #fff;
+        color: #000 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .animate-in {
+        animation: slideIn 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        opacity: 0;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection

@@ -1,211 +1,175 @@
-@extends('layouts.app')
-
-@section('title', 'Historique des Commandes')
-
-@section('content')
-<div class="container py-5"> {{-- Changed mt-4 to py-5 for consistent vertical spacing --}}
-    <div class="row justify-content-center"> {{-- Centered content for better layout --}}
-        <div class="col-md-10 col-lg-8"> {{-- Adjusted column size for better aesthetics on larger screens --}}
-            <div class="text-center mb-4"> {{-- Centered header content --}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#e74c3c" viewBox="0 0 24 24" class="mb-3">
-                    <path d="M12 2L1 8v8l11 6 11-6V8L12 2zm0 2.8L20 9v6l-8 4.4-8-4.4V9l8-4.2z"/>
-                    <path d="M12 12l-5-2.5V15l5 2.5 5-2.5V9.5L12 12z"/>
-                </svg>
-                <h2 class="fw-bold text-danger">Historique des Commandes</h2> {{-- Bold and danger color for title --}}
+<div class="admin-dashboard-wrapper min-vh-100 py-5" style="background: transparent; color: #1e293b; padding-top: 15rem;">
+    <div class="container-fluid px-5 py-4">
+        <div class="d-flex justify-content-between align-items-end mb-5 animate-in">
+            <div class="glass-container p-4 rounded-5 border border-white border-opacity-50">
+                <p class="text-secondary small ls-2 text-uppercase mb-2 fw-bold" style="letter-spacing: 4px;">Suivi des Ventes</p>
+                <h1 class="display-3 fw-bold mb-0 text-dark">Historique Commandes.</h1>
+                <p class="fs-5 text-muted mt-3 fw-medium">Consultez l'ensemble des transactions effectuées sur vos stands <span class="text-primary">Eat&Drink</span>.</p>
             </div>
-
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert"> {{-- Added dismissible alert --}}
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <div class="mb-4 d-flex justify-content-end"> {{-- Moved button to right and increased margin --}}
-                <a href="{{ route('produits.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Retour aux produits
-                </a> {{-- Changed to outline-secondary and added icon for consistency --}}
+            <div class="text-end pb-3">
+                <a href="{{ route('produits.index') }}" class="btn btn-glass-auth shadow-sm fw-bold">
+                    <i class="bi bi-arrow-left me-2"></i>RETOUR AUX PRODUITS
+                </a>
             </div>
+        </div>
 
-            @if($commandes->count() > 0)
-                <div class="row">
-                    @foreach($commandes as $commande)
-                        <div class="col-12 mb-4">
-                            <div class="card shadow-sm border-0" style="border-radius: 0.75rem;"> {{-- Added shadow, no border, slightly rounded --}}
-                                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid #eee;"> {{-- White background, custom border, more padding --}}
-                                    <h5 class="mb-0 fw-bold text-dark">Commande #{{ $commande->id }}</h5> {{-- Darker, bolder text --}}
-                                    <span class="badge bg-primary rounded-pill py-2 px-3 fs-6"> {{-- Larger, rounded pill badge --}}
-                                        <i class="bi bi-calendar"></i> {{ $commande->date_commande->format('d/m/Y H:i') }}
-                                    </span>
+        @if(session('success'))
+            <div class="alert glass-container border-success border-opacity-25 text-success p-4 rounded-5 mb-5 animate-in">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if($commandes->count() > 0)
+            <div class="row animate-in" style="animation-delay: 0.1s;">
+                @foreach($commandes as $commande)
+                    <div class="col-12 mb-5">
+                        <div class="glass-container p-0 rounded-5 shadow-sm border border-white overflow-hidden transition-all hover-up">
+                            <div class="p-4 border-bottom border-white border-opacity-50 d-flex justify-content-between align-items-center bg-white bg-opacity-30">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box bg-soft-primary me-3" style="width: 50px; height: 50px;">
+                                        <i class="bi bi-receipt fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-0 text-dark">Commande #{{ $commande->id }}</h4>
+                                        <div class="text-secondary small text-uppercase ls-1">{{ $commande->stand->nom_stand }}</div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <p class="mb-1"><strong>Stand:</strong> <span class="text-muted">{{ $commande->stand->nom_stand }}</span></p>
-                                    <p class="mb-3 fs-5 text-danger fw-bold"><strong>Total:</strong> {{ number_format($commande->total, 2) }} €</p> {{-- Prominent total --}}
+                                <span class="badge glass-pill text-dark px-4 py-2 rounded-pill border border-white">
+                                    <i class="bi bi-calendar3 me-2 text-primary"></i>{{ $commande->date_commande->format('d M Y, H:i') }}
+                                </span>
+                            </div>
+
+                            <div class="p-5">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <p class="text-secondary small text-uppercase ls-1 mb-1">Total Transaction</p>
+                                        <h2 class="fw-bold text-dark">{{ number_format($commande->total, 2) }} €</h2>
+                                    </div>
                                     @if($commande->client_email)
-                                        <p class="mb-3"><strong>Client:</strong> <span class="text-muted">{{ $commande->client_email }}</span></p>
+                                        <div class="col-md-6 text-md-end">
+                                            <p class="text-secondary small text-uppercase ls-1 mb-1">Identifiant Client</p>
+                                            <h5 class="text-dark fw-medium">{{ $commande->client_email }}</h5>
+                                        </div>
                                     @endif
-                                    <h6 class="fw-bold text-dark mb-2">Produits commandés:</h6> {{-- Bolder title for products --}}
+                                </div>
+
+                                <div class="glass-container rounded-4 p-4 border-0">
+                                    <h6 class="fw-bold text-uppercase ls-1 text-secondary mb-4">Détails des Articles</h6>
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-hover table-borderless"> {{-- Added striped and hover, removed outer border --}}
+                                        <table class="table admin-fancy-table align-middle m-0">
                                             <thead>
-                                                <tr>
-                                                    <th class="text-primary">Produit</th> {{-- Primary color for headers --}}
-                                                    <th class="text-primary">Prix unitaire</th>
-                                                    <th class="text-primary">Quantité</th>
-                                                    <th class="text-primary">Sous-total</th>
+                                                <tr class="small text-uppercase">
+                                                    <th class="border-0 pb-3 text-secondary fw-bold">Désignation</th>
+                                                    <th class="border-0 pb-3 text-secondary fw-bold">Prix Unit.</th>
+                                                    <th class="border-0 pb-3 text-secondary fw-bold text-center">Qté</th>
+                                                    <th class="border-0 pb-3 text-end text-secondary fw-bold">Sous-total</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($commande->produits as $produit)
-    <tr>
-        <td>{{ $produit['nom'] ?? 'Produit inconnu' }}</td>
-        <td>{{ number_format($produit['prix'] ?? 0, 2) }} €</td>
-        <td>{{ $produit['quantite'] ?? 0 }}</td>
-        <td>{{ number_format($produit['sous_total'] ?? 0, 2) }} €</td>
-    </tr>
-@endforeach
-
+                                                    <tr>
+                                                        <td class="py-3 fw-bold text-dark">{{ $produit['nom'] ?? 'Produit inconnu' }}</td>
+                                                        <td class="py-3 text-secondary">{{ number_format($produit['prix'] ?? 0, 2) }} €</td>
+                                                        <td class="py-3 text-center">
+                                                            <span class="badge bg-soft-primary px-3 py-1 rounded-pill">{{ $produit['quantite'] ?? 0 }}</span>
+                                                        </td>
+                                                        <td class="py-3 text-end fw-bold text-dark">{{ number_format($produit['sous_total'] ?? 0, 2) }} €</td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="d-flex justify-content-end mt-3"> {{-- Aligned to end --}}
-                                        <a href="{{ route('commandes.show', $commande) }}" class="btn btn-info btn-sm">
-                                            <i class="bi bi-info-circle"></i> Voir les détails
-                                        </a> {{-- Added icon --}}
-                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end mt-4">
+                                    <a href="{{ route('commandes.show', $commande) }}" class="btn btn-glass-auth px-4">
+                                        <i class="bi bi-eye me-2"></i>DÉTAILS COMPLETS
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="alert alert-info text-center py-4" style="border-radius: 0.75rem;"> {{-- Consistent styling for empty state --}}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#2980b9" viewBox="0 0 24 24" class="mb-3">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                    </svg>
-                    <h4 class="fw-bold text-primary">Aucune commande reçue pour le moment !</h4>
-                    <p class="text-muted">Les commandes de vos clients apparaîtront ici. Partagez votre vitrine pour commencer à recevoir des commandes.</p>
-                </div>
-            @endif
-        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="glass-container p-5 rounded-5 text-center animate-in">
+                <i class="bi bi-clock-history display-1 text-secondary opacity-25 mb-4"></i>
+                <h3 class="text-secondary fw-bold">Aucune transaction</h3>
+                <p class="text-muted mb-5">Votre historique est vide pour le moment. Recevez vos premières commandes pour voir les détails ici.</p>
+                <a href="{{ route('produits.index') }}" class="btn btn-glass-auth px-5 py-3 fw-bold">
+                    RETOUR À MON INVENTAIRE
+                </a>
+            </div>
+        @endif
     </div>
 </div>
-@endsection
 
----
-
-@section('styles')
 <style>
-    .container {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
+    .ls-1 { letter-spacing: 1px; }
+    .ls-2 { letter-spacing: 2px; }
+    
+    .glass-container {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        transition: all 0.4s ease;
     }
 
-    /* Card styling */
-    .card {
-        background-color: #fff;
-        border-radius: 1rem;
-        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); /* Light shadow for cards */
-    }
-    .card-header {
-        background-color: #f8f9fa; /* Light grey header */
-        border-bottom: 1px solid #dee2e6; /* Subtle border */
-        border-top-left-radius: calc(1rem - 1px);
-        border-top-right-radius: calc(1rem - 1px);
-        font-weight: 600;
-        color: #343a40;
+    .icon-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: rgba(244, 118, 104, 0.1);
+        color: #f47668;
     }
 
-    /* Headings and text */
-    h1, h2 {
-        font-weight: 700;
-        color: #343a40;
-    }
-    .text-danger {
-        color: #e74c3c !important; /* Consistent brand red */
-    }
-    .fw-bold {
-        font-weight: 700 !important;
+    .bg-soft-primary {
+        background: rgba(244, 118, 104, 0.1);
+        color: #f47668;
     }
 
-    /* Buttons */
-    .btn-primary {
-        background-color: #e74c3c;
-        border-color: #e74c3c;
+    .glass-pill {
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-glass-auth {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        color: #64748b !important;
+        border-radius: 50px !important;
         transition: all 0.3s ease;
-        padding: 0.75rem 1.5rem;
-        font-size: 1.1rem;
-        border-radius: 0.5rem;
-    }
-    .btn-primary:hover {
-        background-color: #c0392b;
-        border-color: #c0392b;
-    }
-    .btn-outline-secondary {
-        border-color: #ced4da;
-        color: #6c757d;
-        transition: all 0.3s ease;
-        padding: 0.6rem 1.2rem; /* Slightly smaller for return button */
-        font-size: 1rem;
-        border-radius: 0.5rem;
-    }
-    .btn-outline-secondary:hover {
-        background-color: #6c757d;
-        color: #fff;
-    }
-    .btn-info { /* Style for 'Voir les détails' button */
-        background-color: #3498db;
-        border-color: #3498db;
-        color: #fff;
-        border-radius: 0.3rem;
-        font-size: 0.9rem;
-    }
-    .btn-info:hover {
-        background-color: #2980b9;
-        border-color: #2980b9;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
     }
 
-    /* Badge styling */
-    .badge.bg-primary {
-        background-color: #e74c3c !important; /* Primary badge color */
-        color: #fff;
-    }
-    .badge.rounded-pill {
-        border-radius: 50rem !important; /* Truly pill-shaped */
+    .btn-glass-auth:hover {
+        background: #fff;
+        color: #000 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
 
-    /* Table styling */
-    .table-responsive {
-        margin-top: 1rem;
-    }
-    .table th {
-        border-top: none; /* Remove top border for table headers */
-        font-weight: 600;
-        color: #2c3e50; /* Darker text for table headers */
-    }
-    .table td {
-        vertical-align: middle;
-    }
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0,0,0,.02); /* Lighter stripe effect */
-    }
-    .table-hover tbody tr:hover {
-        background-color: rgba(0,0,0,.05); /* Subtle hover effect */
-    }
-    .table-borderless th, .table-borderless td {
-        border: none; /* Ensure no borders */
+    .hover-up:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.7);
     }
 
-    /* Alert messages */
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border-color: #c3e6cb;
+    .animate-in {
+        animation: slideIn 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        opacity: 0;
     }
-    .alert-info {
-        background-color: #d1ecf1;
-        color: #0c5460;
-        border-color: #bee5eb;
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .admin-fancy-table th {
+        font-family: 'Syne', sans-serif;
     }
 </style>
-@endsection
